@@ -12,6 +12,41 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap&subset=vietnamese" rel="stylesheet">
     <title>Car Type</title>
+    <!-- - them jquery --->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <style>
+      /* Định dạng bảng */
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        width: 870px; /* Tăng kích thước bảng */
+        height: 650px;
+        margin: 0 auto; /* Căn giữa bảng */
+        overflow-x: auto;
+      }
+  
+      /* Định dạng hàng đầu tiên (tiêu đề cột) */
+      thead th {
+        background-color: #33b0b9;
+        font-weight: bold;
+        padding: 12px; /* Tăng kích thước padding */
+        text-align: left;
+      }
+  
+      /* Định dạng các ô dữ liệu */
+      tbody td {
+        border: 1px solid #ddd;
+        padding: 12px; /* Tăng kích thước padding */
+        background-color: #ffffff74;
+      }
+  
+      /* Định dạng các ô dữ liệu đặc biệt (ví dụ: cột đầu tiên) */
+      tbody td:first-child {
+        font-weight: bold;
+      }
+    </style>
+
 </head>
 <body>
   <div class="header">
@@ -105,6 +140,62 @@
                 <p class="content__layout2p1Heading">Danh sách xe hơi</p>
               </div>
               <div class="content__layout2p2">
+                <!-- - Doan code de lay du lieu tu localhost:3000/data va hien thi len page -->
+
+              <table id="carTable" class="hidden">
+                <thead>
+                  <tr>
+                      <th>Hãng xe</th>
+                      <th>Loại xe</th>
+                      <th>Số chỗ ngồi</th>
+                      <th>Năm sản xuất</th>
+                      <th>Biển số</th>
+                      <th>Tình trạng</th>
+                      <th>Vị trí hiện tại</th>
+                      <th>Nguyên liệu</th>
+                      <th>Số km đã đi</th>
+                  </tr>
+                </thead>
+                <tbody id="carTableBody"></tbody>
+              </table>
+<style>
+  .hidden {
+    display: none;
+  }
+</style>
+<script>
+    fetch('http://localhost:3000/data')
+      .then(response => response.json())
+      .then(cars => {
+        const carTable = document.getElementById('carTable');
+        const carTableBody = document.getElementById('carTableBody');
+
+        // Xóa các hàng cũ trong bảng
+        while (carTableBody.firstChild) {
+          carTableBody.removeChild(carTableBody.firstChild);
+        }
+
+        // Thêm dữ liệu mới vào bảng
+        cars.forEach(car => {
+          const row = carTableBody.insertRow();
+          row.insertCell().textContent = car.HangXe;
+          row.insertCell().textContent = car.LoaiXe;
+          row.insertCell().textContent = car.SoChoNgoi;
+          row.insertCell().textContent = car.NamSanXuat;
+          row.insertCell().textContent = car.BienSo;
+          row.insertCell().textContent = car.TinhTrang;
+          row.insertCell().textContent = car.ViTriHienTai;
+          row.insertCell().textContent = car.NguyenLieu;
+          row.insertCell().textContent = car.SoKmDaDi;
+        });
+
+        // Hiển thị bảng
+        carTable.classList.remove('hidden');
+      })
+      .catch(error => {
+        console.log('Error fetching car list:', error);
+      });
+</script>
               </div>
           </div>
         </div>

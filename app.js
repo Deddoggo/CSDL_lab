@@ -5,6 +5,8 @@ const path = require('path');
 var sql = require('mssql');
 var consoleTable = require('console.table');
 const fs = require('fs');
+const { connect } = require('http2');
+app.use( express.static('public'));
 // Cấu hình đường dẫn cho các tệp HTML
 const htmlDir = path.join(__dirname, 'views');
 // Thiết lập Db
@@ -35,7 +37,7 @@ sql.connect(config, function(err) {
       // Your query execution or other database operations here
   }
 });
-
+module.exports = connect ;
 // Định vị thư mục chứa các tệp tĩnh
 app.use('/assets', express.static(path.join(__dirname, 'views', 'assets')));
 
@@ -57,27 +59,20 @@ app.use((req, res, next) => {
   });
 });
 
-app.get('/', (req, res) => {
-  // Mở kết nối tới SQL Server
-  sql.connect(config, (err) => {
-    if (err) {
-      console.error('Không thể kết nối tới SQL Server:', err);
-      res.status(500).send('Không thể kết nối tới SQL Server');
-    } else {
-      // Truy vấn SQL Server
-      new sql.Request().query('SELECT * FROM Xe', (err, result) => {
-        if (err) {
-          console.error('Lỗi truy vấn SQL:', err);
-          res.status(500).send('Lỗi truy vấn SQL');
-        } else {
-          // Trả về kết quả dưới dạng JSON
-          res.json(result.recordset);
-        }
-      });
-    }
-  });
-});
 // ... Định nghĩa các route khác
+app.get('/data', (req, res) => {
+  // Thực hiện truy vấn SQL để lấy thông tin về các loại xe
+  const query = 'SELECT * FROM Xe';
+  sql.query(query)
+    .then((result) => {
+      // Gửi kết quả về cho máy khách
+      res.json(result.recordset);
+    })
+    .catch((error) => {
+      console.log('Error executing SQL query:', error);
+      res.status(500).send('Internal Server Error');
+    });
+});
 
 // Khởi động máy chủ
 app.listen(3000, () => {
