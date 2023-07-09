@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="./assets/css/base.css">
     <link rel="stylesheet" href="./assets/css/main.css">
     <link rel="stylesheet" href="./assets/css/home.css">
-    <link rel="stylesheet" href="./assets/css/layout2.css">
+    <link rel="stylesheet" href="./assets/css/layout1.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap&subset=vietnamese" rel="stylesheet">
     <title>Customer History</title>
@@ -79,41 +79,51 @@
       <li class="header__listItem"><a class="header__link" href="signin.html">Đăng Xuất</a></li>
       <li class="header__listItem"><a class="header__link" href="help.html">Hỗ Trợ</a></li>
     </ul>
-</div>
+  </div>
   
-      <div class="content">
-        <div class="content__sidebar">
-            <p class="content__sidebarHeading">Chức năng</p>
-            <ul class="content__sidebarList">
-              <li class="content__sidebarItem"><a class="content__sidebarFunction" href="manageCustomer.html">Quản lý khách hàng</a></li>
-              <li class="content__sidebarItem">
-                <ul class="content__sidebarSubList">
-                <li class="content__sidebarSubItem"><a class="content__sidebarLink" href="addCustomer.html">Thêm thông tin khách hàng</a></li>
-                <li class="content__sidebarSubItem"><a class="content__sidebarLink" href="updateCustomer.html">Sửa thông tin khách hàng</a></li>
-                <li class="content__sidebarSubItem"><a class="content__sidebarLink" href="removeCustomer.html">Xóa thông tin khách hàng</a></li>
-                <li class="content__sidebarSubItem"><a class="content__sidebarLink" href="searchCustomerByEmail.html">Tìm khách hàng theo email</a></li>
-                <li class="content__sidebarSubItem"><a class="content__sidebarLink" href="searchCustomerByName.html">Tìm khách hàng theo tên</a></li>
-                <li class="content__sidebarSubItem"><a class="content__sidebarLink" href="searchCustomerByPN.html">Tìm khách hàng theo sđt</a></li>
-                <li class="content__sidebarSubItem"><a class="content__sidebarLink" href="customerHistory.html">Lịch sử thuê của khách</a></li>
-              </ul>
-              </li>
-            </ul>
-            <p id="ct__sbback"><a class="ct__sbbackLink" href="home.html"><i class="ti-angle-left" style="font-size: 1.8rem;"></i>&nbspQuay lại</a></p>
-        </div>        
-        <div class="content__main">
-          <div class="content__layout2">
-              <div class="content__layout2p1">
-                <p class="content__layout2p1Heading">Lịch sử thuê xe của khách hàng</p>
-              </div>
-              <div class="content__layout2p2">
-                
-              </div>
-          </div>
-        </div>
+  <div class="content">
+    <div class="content__sidebar">
+      <p class="content__sidebarHeading">Chức năng</p>
+      <ul class="content__sidebarList">
+        <li class="content__sidebarItem"><a class="content__sidebarFunction" href="manageCustomer.html">Quản lý khách hàng</a></li>
+        <li class="content__sidebarItem">
+          <ul class="content__sidebarSubList">
+          <li class="content__sidebarSubItem"><a class="content__sidebarLink" href="addCustomer.html">Thêm thông tin khách hàng</a></li>
+          <li class="content__sidebarSubItem"><a class="content__sidebarLink" href="updateCustomer.html">Sửa thông tin khách hàng</a></li>
+          <li class="content__sidebarSubItem"><a class="content__sidebarLink" href="removeCustomer.html">Xóa thông tin khách hàng</a></li>
+          <li class="content__sidebarSubItem"><a class="content__sidebarLink" href="searchCustomerByEmail.html">Tìm khách hàng theo email</a></li>
+          <li class="content__sidebarSubItem"><a class="content__sidebarLink" href="searchCustomerByName.html">Tìm khách hàng theo tên</a></li>
+          <li class="content__sidebarSubItem"><a class="content__sidebarLink" href="searchCustomerByPN.html">Tìm khách hàng theo sđt</a></li>
+          <li class="content__sidebarSubItem"><a class="content__sidebarLink" href="customerHistory.html">Lịch sử thuê của khách</a></li>
+        </ul>
+        </li>
+      </ul>
+      <p id="ct__sbback"><a class="ct__sbbackLink" href="home.html"><i class="ti-angle-left" style="font-size: 1.8rem;"></i>&nbspQuay lại</a></p>
     </div>
+    <div class="content__main">
+      <div class="content__layout1">
+          <div class="content__layout1p1">
+              <form class="content__layout1p1SearchForm" action="#" method="get">
+                  <input class="content__layout1p1SearchArea" type="text" placeholder="Nhập tên của khách hàng muốn xem lịch sử">
+                  <input class="content__layout1p1BtnSubmit" type="submit" value="Tìm kiếm">
+              </form>
+          </div>
+          <div class="content__layout1p2">
+            <!-- 
+              ở đây nhập thông tin tìm kiếm
+              các thầy tìm theo tên, trùng nó hiện hết
+             -->
+          </div>
+          <div class="content__layout1p3">
+            <!-- 
+              ở đây hiện lịch sử của khách
+             -->
+          </div>
+      </div>
+    </div>
+  </div>
     
-  
-    <div id="footer">
+  <div id="footer">
       <div class="footer">
             <footer class="footer">
                 <div class="footer__p1">
@@ -155,6 +165,6 @@
             <div class="footer__slogan">Best Service, Right Time, Right People</div>
           </footer>
       </div>
-    </div>
+  </div>
   </body>
 </html>
