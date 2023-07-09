@@ -28,10 +28,11 @@
     width: 90%;
     align-self: center;
     border: solid #333;
-    border-radius: 15px;
+    /* border-radius: 15px; */
     margin: 2rem 0rem;
     margin-top: 0;
     flex:11;
+    max-height: 60rem;
 }
 
 .content__layout2p2Form{
@@ -71,6 +72,14 @@
     background-color: var(--mau-1);
     color: var(--mau-4);
 }
+
+.content__layout2p2::-webkit-scrollbar {
+    width: 0.7rem;
+    background-color: rgba(255, 255, 255,0);
+    margin: 10rem ;
+}
+
+  
 
 
 

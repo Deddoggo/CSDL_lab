@@ -19,6 +19,26 @@ html {
     box-sizing: border-box;
 }
 
+::-webkit-scrollbar {
+    width: 1rem;
+    background-color: var(--mau-3);
+}
+
+::-webkit-scrollbar-track{
+    border: none;
+    max-height: 100px;
+    padding: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--mau-1);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--mau-2); 
+}
+
+
 .grid {
     width: 1200px;
     max-width: 100%;

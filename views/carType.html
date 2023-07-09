@@ -21,7 +21,7 @@
         border-collapse: collapse;
         width: 100%;
         width: 870px; /* Tăng kích thước bảng */
-        height: 650px;
+        height: 595px;
         margin: 0 auto; /* Căn giữa bảng */
         overflow-x: auto;
       }
@@ -46,7 +46,6 @@
         font-weight: bold;
       }
     </style>
-
 </head>
 <body>
   <div class="header">
@@ -164,7 +163,7 @@
   }
 </style>
 <script>
-    fetch('http://localhost:3000/data')
+    fetch('http://localhost:3000/danhsachxe')
       .then(response => response.json())
       .then(cars => {
         const carTable = document.getElementById('carTable');
@@ -195,7 +194,7 @@
       .catch(error => {
         console.log('Error fetching car list:', error);
       });
-</script>
+      </script>
               </div>
           </div>
         </div>

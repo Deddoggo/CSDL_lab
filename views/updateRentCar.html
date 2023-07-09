@@ -8,7 +8,8 @@
     <link rel="stylesheet" href="./assets/css/base.css">
     <link rel="stylesheet" href="./assets/css/main.css">
     <link rel="stylesheet" href="./assets/css/home.css">
-    <link rel="stylesheet" href="./assets/css/updateRentCar.css">
+    <link rel="stylesheet" href="./assets/css/layout1.css">
+    <link rel="stylesheet" href="./assets/css/layout1Update.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap&subset=vietnamese" rel="stylesheet">
     <title>Update Rent Car</title>
@@ -79,51 +80,53 @@
           <li class="header__listItem"><a class="header__link" href="signin.html">Đăng Xuất</a></li>
           <li class="header__listItem"><a class="header__link" href="help.html">Hỗ Trợ</a></li>
         </ul>
-      </div>
+    </div>
       <!-- End header -->
 
       <!-- Begin content -->
       <div class="content">
         <div class="content__sidebar">
             <p class="content__sidebarHeading">Chức năng</p>
-        <ul class="content__sidebarList">
-          <li class="content__sidebarItem"><a class="content__sidebarFunction" href="manageRentCar.html">Quản lý thuê xe</a></li>
-          <li class="content__sidebarItem">
-            <ul class="content__sidebarSubList">
-            <li class="content__sidebarSubItem"><a class="content__sidebarLink" href="addRentCar.html">Thêm thông tin đặt xe</a></li>
-            <li class="content__sidebarSubItem"><a class="content__sidebarLink" href="searchRentCar.html">Tìm thông tin đặt xe</a></li>
-            <li class="content__sidebarSubItem"><a class="content__sidebarLink" href="updateRentCar.html">Chỉnh sửa thông tin đặt xe</a></li>
-            <li class="content__sidebarSubItem"><a class="content__sidebarLink" href="searchBill.html">Thông tin hóa đơn</a></li>
-          </ul>
-          </li>
-        </ul>
-        <p id="ct__sbback"><a class="ct__sbbackLink" href="home.html"><i class="ti-angle-left" style="font-size: 1.8rem;"></i>&nbspQuay lại</a></p>
+            <ul class="content__sidebarList">
+              <li class="content__sidebarItem"><a class="content__sidebarFunction" href="manageRentCar.html">Quản lý thuê xe</a></li>
+              <li class="content__sidebarItem">
+                <ul class="content__sidebarSubList">
+                <li class="content__sidebarSubItem"><a class="content__sidebarLink" href="addRentCar.html">Thêm thông tin đặt xe</a></li>
+                <li class="content__sidebarSubItem"><a class="content__sidebarLink" href="searchRentCar.html">Tìm thông tin đặt xe</a></li>
+                <li class="content__sidebarSubItem"><a class="content__sidebarLink" href="updateRentCar.html">Chỉnh sửa thông tin đặt xe</a></li>
+                <li class="content__sidebarSubItem"><a class="content__sidebarLink" href="removeRentCar.html">Xóa thông tin đặt xe</a></li>
+                <li class="content__sidebarSubItem"><a class="content__sidebarLink" href="searchBill.html">Thông tin hóa đơn</a></li>
+              </ul>
+              </li>
+            </ul>
+            <p id="ct__sbback"><a class="ct__sbbackLink" href="home.html"><i class="ti-angle-left" style="font-size: 1.8rem;"></i>&nbspQuay lại</a></p>
         </div>
         <div class="content__main">
             <div class="content__layout1">
                 <div class="content__layout1p1">
                     <form class="content__layout1p1SearchForm" action="#" method="get">
                         <input class="content__layout1p1SearchArea" type="text" placeholder="Nhập mã đặt xe">
-                        <input class="content__layout1p1BtnSubmit" type="submit" value="Tìm">
+                        <input class="content__layout1p1BtnSubmit" type="submit" value="Tìm kiếm">
                     </form>
                 </div>
                 <div class="content__layout1p2">
-                    
+                        
                 </div>
-
                 <div class="content__layout1p3">
-                    
-                    <div class="infor"><i>Chỉnh sửa</i></div>
-                    <form class="content__layout1p1SearchForm" action="#" method="get">
-                        <input class="content__layout1p1SearchArea2" type="text" placeholder="Mã khách hàng">
-                        <input class="content__layout1p1SearchArea2" type="text" placeholder="Mã xe">
-                        <input class="content__layout1p1SearchArea2" type="text" placeholder="Hình ảnh">
-                        <input class="content__layout1p1SearchArea2" type="text" placeholder="Điểm nhận xe">
-                        <input class="content__layout1p1SearchArea2" type="text" placeholder="Điểm trả xe"> 
-                        <input class="content__layout1p1SearchArea2" type="text" placeholder="Ngày bắt đầu"> 
-                        <input class="content__layout1p1SearchArea2" type="text" placeholder="Ngày kết thúc">                        
-                        <input class="content__layout1p1BtnSubmit2" type="submit" value="Xác nhận">
-                    </form>
+                    <div class="content__layout1p3Header">  
+                        <p class="content__layout1p3HeaderP">Chỉnh sửa</p>
+                    </div>
+                    <div class="content__layout1p3Form">
+                        <form class="content__layout1p3FormUpdate" action="#" method="post">
+                            <input class="content__layout1p3Input" type="text" placeholder="Nhập mã khách hàng">
+                            <input class="content__layout1p3Input" type="text" placeholder="Nhập mã xe">
+                            <input class="content__layout1p3Input" type="text" placeholder="Nhập điểm nhận xe">
+                            <input class="content__layout1p3Input" type="text" placeholder="Nhập điểm trả xe">
+                            <input class="content__layout1p3Input" type="text" placeholder="Nhập ngày bắt đầu thuê xe">
+                            <input class="content__layout1p3Input" type="text" placeholder="Nhập ngày kết thúc thuê xe">                
+                            <input class="content__layout1p3Btn" type="submit" value="Xác nhận">
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>   
