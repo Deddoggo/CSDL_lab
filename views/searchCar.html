@@ -21,8 +21,6 @@
       table {
         border-collapse: collapse;
         width: 100%;
-        width: 870px; /* Tăng kích thước bảng */
-        height: 595px;
         margin: 0 auto; /* Căn giữa bảng */
         overflow-x: auto;
       }
@@ -179,8 +177,19 @@
   }
 </style>
 
+<style>
+  .blank-message {
+    color: red;
+    font-size: 24px; /* Kích thước chữ */
+    font-weight: bold; /* Độ đậm chữ */
+    overflow-x: 12px;
+    padding-top: 10px; /* Dịch xuống */
+    padding-right: 20px; /* Dịch sang phải */
+    text-align:center; /* Căn phải */
+  }
+</style>
 <p id="noMatchMessage" class="no-match-message" style="display: none;">Không có xe khớp với biển số bạn nhập</p>
-
+<p id="blankmessage" class="blank-message" style="display: none;">Không được để trống ô tìm kiếm </p>
 <script>
     function searchCarsByLicensePlate() {
   const licensePlate = document.getElementById('licensePlateInput').value;
@@ -201,7 +210,14 @@
       // Không có xe khớp, hiển thị thông báo và ẩn bảng
       noMatchMessage.style.display = 'block';
       carTable.style.display = 'none';
-    } else {
+      blankmessage.style.display = 'none';
+    } 
+    else if(licensePlate === ''){
+      blankmessage.style.display = 'block';
+      carTable.style.display = 'none';
+      noMatchMessage.style.display = 'none';
+    }
+    else {
       // Có xe khớp, ẩn thông báo và hiển thị bảng
       noMatchMessage.style.display = 'none';
       carTable.style.display = 'table';
