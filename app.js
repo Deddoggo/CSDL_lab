@@ -137,6 +137,25 @@ app.post('/themxe', (req, res) => {
       res.sendStatus(500);
     });
 });
+// xoa xe khoi bang
+  //tim xe de xoa
+  app.get('/timxedexoa', (req, res) => {
+    // Lấy biển số xe từ yêu cầu của người dùng
+    const carCode = req.query.carCode;
+  
+    // Thực hiện truy vấn SQL để lấy thông tin về các loại xe dựa trên biển số
+    const query = `SELECT * FROM Xe WHERE MaXe LIKE '%${carCode}%'`;
+  
+    sql.query(query)
+      .then((result) => {
+        // Gửi kết quả về cho máy khách
+        res.json(result.recordset);
+      })
+      .catch((error) => {
+        console.log('Error executing SQL query:', error);
+        res.status(500).send('Internal Server Error');
+      });
+  });
 // Khởi động máy chủ
 app.listen(3000, () => {
   console.log('Server is running on port 3000');
