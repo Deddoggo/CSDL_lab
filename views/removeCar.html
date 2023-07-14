@@ -122,10 +122,28 @@
                     </div>
                     <div class="submition_contentContent">Bạn có chắc chắn muốn xóa ?</div>
                     <div class="submition_contentFooter">
-                      <form class="content__layout1p1SearchForm" action="#" method="push">
-                        <input class="content__layout1p1BtnSubmit31" type="button" value="Có" onclick="deleteCar()">
+                      <form class="content__layout1p1SearchForm" action="/xoaxe" method="post">
+                        <button class="content__layout1p1BtnSubmit31" type="submit" onclick="deleteCar()">Có</button>
                         <button class="content__layout1p1BtnSubmit32">Không</button>
                       </form>
+                      <script>
+                        function deleteCar() {
+                          const carCode = document.getElementById('carCodeInput').value;
+                          // Gửi yêu cầu xóa xe đến máy chủ
+                          $.ajax({
+                            url: '/xoaxe',
+                            type: 'POST',
+                            data: { carCode: carCode },
+                            success: function(response) {
+                              // Không hiển thị thông báo
+                            },
+                            error: function() {
+                              // Xảy ra lỗi trong quá trình gửi yêu cầu
+                              alert('Đã xảy ra lỗi');
+                            }
+                          });
+                        }
+                      </script>                                         
                     </div>
                 </div> 
             </div>
@@ -155,7 +173,7 @@
             <div class="content__layout1">
                 <div class="content__layout1p1">
                     <form class="content__layout1p1SearchForm" action="#" method="get">
-                      <input class="content__layout1p1SearchArea" id="carCodeInput" type="text" placeholder="Nhập mã xe ( mã xe có dạng MX00000 )">
+                      <input class="content__layout1p1SearchArea" name="carCode" id="carCodeInput" type="text" placeholder="Nhập mã xe ( mã xe có dạng MX00000 )">
                         <input class="content__layout1p1BtnSubmit" type="button" value="Tìm kiếm" onclick="searchCarsByCode()">
                     </form>
                 </div>
