@@ -124,17 +124,14 @@ app.post('/themxe', (req, res) => {
   const soChoNgoi = req.body.soChoNgoi;
   const viTriHienTai = req.body.viTriHienTai;
   // Thực hiện truy vấn SQL để thêm thông tin xe vào cơ sở dữ liệu
-  const query = `INSERT INTO Xe (HangXe, LoaiXe, NamSanXuat, BienSo, NguyenLieu, SoKmDaDi, SoChoNgoi, ViTriHienTai) VALUES ('${hangXe}', '${loaiXe}', '${namSanXuat}', '${bienSo}', '${nguyenLieu}', '${soKmDaDi}', '${soChoNgoi}', '${viTriHienTai}')`;
+  const query = `INSERT INTO Xe (TinhTrang ,HangXe, LoaiXe, NamSanXuat, BienSo, NguyenLieu, SoKmDaDi, SoChoNgoi, ViTriHienTai) VALUES (N'Chưa thuê','${hangXe}', '${loaiXe}', '${namSanXuat}', '${bienSo}', '${nguyenLieu}', '${soKmDaDi}', '${soChoNgoi}', '${viTriHienTai}')`;
   sql.query(query)
     .then(() => {
       // Trả về mã trạng thái 200 để chỉ rằng thêm xe thành công
       res.send('Thêm thành công');
-      res.redirect('back');
     })
     .catch(error => {
-      console.log('Error adding car:', error);
-      // Trả về mã trạng thái 500 để chỉ rằng có lỗi xảy ra
-      res.sendStatus(500);
+      res.send('Thêm thất bại');
     });
 });
 // xoa xe khoi bang
@@ -156,6 +153,60 @@ app.post('/themxe', (req, res) => {
         res.status(500).send('Internal Server Error');
       });
   });
+  // Xoa thong tin xe
+  app.post('/xoaxe', (req, res) => {
+    const carCode = req.body.carCode;
+  
+    // Thực hiện truy vấn SQL để xóa thông tin xe từ cơ sở dữ liệu dựa trên mã xe
+    const query = `DELETE FROM Xe WHERE MaXe='${carCode}'`;
+    sql.query(query)
+    .then(() => {
+      // Trả về mã trạng thái 200 để chỉ rằng xóa xe thành công
+      res.send('Xóa thành công');
+    })
+    .catch(error => {
+      res.send('Xóa thất bại');
+    });
+  });
+//Thay doi thong tin cua xe
+  //Tim xe de sua
+  app.get('/timxedesua', (req, res) => {
+    // Lấy biển số xe từ yêu cầu của người dùng
+    const carCode = req.query.carCode;
+  
+    // Thực hiện truy vấn SQL để lấy thông tin về các loại xe dựa trên biển số
+    const query = `SELECT * FROM Xe WHERE MaXe LIKE '%${carCode}%'`;
+  
+    sql.query(query)
+      .then((result) => {
+        // Gửi kết quả về cho máy khách
+        res.json(result.recordset);
+      })
+      .catch((error) => {
+        console.log('Error executing SQL query:', error);
+        res.status(500).send('Internal Server Error');
+      });
+  });
+  //Sua thong tin xe
+  // Sua thong tin xe
+app.post('/suaxe', (req, res) => {
+  // Lấy thông tin xe từ yêu cầu POST
+  const carCode = req.body.carCode;
+  const bienSo = req.body.bienSo;
+  const tinhTrang = req.body.tinhTrang;
+  const viTriHienTai = req.body.viTriHienTai;
+  
+  // Thực hiện truy vấn SQL để sửa thông tin xe trong cơ sở dữ liệu
+  const query = `UPDATE Xe SET BienSo='${bienSo}', TinhTrang='${tinhTrang}', ViTriHienTai='${viTriHienTai}' WHERE MaXe='${carCode}'`;
+  sql.query(query)
+    .then(() => {
+      // Trả về mã trạng thái 200 để chỉ rằng sửa xe thành công
+      res.send('Sửa thành công');
+    })
+    .catch(error => {
+      res.send('Sửa thất bại');
+    });
+});
 // Khởi động máy chủ
 app.listen(3000, () => {
   console.log('Server is running on port 3000');

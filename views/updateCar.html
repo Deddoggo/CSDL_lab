@@ -13,6 +13,38 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap&subset=vietnamese" rel="stylesheet">
     <title>Update Car</title>
+    <!-- - them jquery --->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <style>
+      /* Định dạng bảng */
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 0 auto; /* Căn giữa bảng */
+        overflow-x: auto;
+      }
+  
+      /* Định dạng hàng đầu tiên (tiêu đề cột) */
+      thead th {
+        background-color: #33b0b9;
+        font-weight: bold;
+        padding: 12px; /* Tăng kích thước padding */
+        text-align: left;
+      }
+  
+      /* Định dạng các ô dữ liệu */
+      tbody td {
+        border: 1px solid #ddd;
+        padding: 12px; /* Tăng kích thước padding */
+        background-color: #ffffff74;
+      }
+  
+      /* Định dạng các ô dữ liệu đặc biệt (ví dụ: cột đầu tiên) */
+      tbody td:first-child {
+        font-weight: bold;
+      }
+    </style>
 </head>
 <body>
     <!-- Begin header -->
@@ -105,25 +137,151 @@
         <div class="content__main">
             <div class="content__layout1">
                 <div class="content__layout1p1">
-                    <form class="content__layout1p1SearchForm" action="#" method="get">
-                        <input class="content__layout1p1SearchArea" type="text" placeholder="Nhập mã xe">
-                        <input class="content__layout1p1BtnSubmit" type="submit" value="Tìm kiếm">
-                    </form>
+                  <form class="content__layout1p1SearchForm" action="#" method="get">
+                    <input class="content__layout1p1SearchArea" name="carCode" id="carCodeInput" type="text" placeholder="Nhập mã xe ( mã xe có dạng MX00000 )">
+                      <input class="content__layout1p1BtnSubmit" type="button" value="Tìm kiếm" onclick="searchCarsByCode()">
+                  </form>
                 </div>
                 <div class="content__layout1p2">
-                        
+                        <!-- - Doan code de lay du lieu tu localhost:3000/data va hien thi len page -->
+
+              <table id="carTable" class="hidden">
+                <thead>
+                  <tr>
+                      <th>Hãng xe</th>
+                      <th>Loại xe</th>
+                      <th>Số chỗ ngồi</th>
+                      <th>Năm sản xuất</th>
+                      <th>Biển số</th>
+                      <th>Tình trạng</th>
+                      <th>Vị trí hiện tại</th>
+                      <th>Nguyên liệu</th>
+                      <th>Số km đã đi</th>
+                  </tr>
+                </thead>
+                <tbody id="carTableBody"></tbody>
+              </table>
+<!-- Dinh nghia cac style cho bang va thong bao-->
+<style>
+  .hidden {
+    display: none;
+  }
+</style>
+<style>
+  .no-match-message {
+    color: red;
+    font-size: 24px; /* Kích thước chữ */
+    font-weight: bold; /* Độ đậm chữ */
+    overflow-x: 12px;
+    padding-top: 10px; /* Dịch xuống */
+    padding-right: 20px; /* Dịch sang phải */
+    text-align:center; /* Căn phải */
+  }
+</style>
+
+<style>
+  .blank-message {
+    color: red;
+    font-size: 24px; /* Kích thước chữ */
+    font-weight: bold; /* Độ đậm chữ */
+    overflow-x: 12px;
+    padding-top: 10px; /* Dịch xuống */
+    padding-right: 20px; /* Dịch sang phải */
+    text-align:center; /* Căn phải */
+  }
+</style>
+<p id="noMatchMessage" class="no-match-message" style="display: none;">Không có xe khớp với mã xe bạn nhập</p>
+<p id="blankmessage" class="blank-message" style="display: none;">Không được để trống ô tìm kiếm </p>
+<script>
+    function searchCarsByCode() {
+  const carCode = document.getElementById('carCodeInput').value;
+  // Gửi yêu cầu truy vấn với biển số xe đã nhập
+  fetch(`/timxedesua?carCode=${carCode}`)
+    .then(response => response.json())
+    .then(cars => {
+      const noMatchMessage = document.getElementById('noMatchMessage');
+      const carTable = document.getElementById('carTable');
+      const carTableBody = document.getElementById('carTableBody');
+
+      // Xóa các hàng cũ trong bảng
+      while (carTableBody.firstChild) {
+        carTableBody.removeChild(carTableBody.firstChild);
+      }
+
+      if (cars.length === 0) {
+      // Không có xe khớp, hiển thị thông báo và ẩn bảng
+      blankmessage.style.display = 'none';
+      carTable.style.display = 'none';
+      noMatchMessage.style.display = 'block';
+    } 
+    else if(carCode === ''){
+      blankmessage.style.display = 'block';
+      carTable.style.display = 'none';
+      noMatchMessage.style.display = 'none';
+    }
+    else {
+      // Có xe khớp, ẩn thông báo và hiển thị bảng
+      noMatchMessage.style.display = 'none';
+      carTable.style.display = 'table';
+      blankmessage.style.display = 'none';
+      cars.forEach(car => {
+        // Thêm dữ liệu mới vào bảng
+        const row = carTableBody.insertRow();
+        row.insertCell().textContent = car.HangXe;
+        row.insertCell().textContent = car.LoaiXe;
+        row.insertCell().textContent = car.SoChoNgoi;
+        row.insertCell().textContent = car.NamSanXuat;
+        row.insertCell().textContent = car.BienSo;
+        row.insertCell().textContent = car.TinhTrang;
+        row.insertCell().textContent = car.ViTriHienTai;
+        row.insertCell().textContent = car.NguyenLieu;
+        row.insertCell().textContent = car.SoKmDaDi;
+      });
+    }
+  })
+  .catch(error => {
+    console.log('Error searching cars:', error);
+  });
+}
+      </script>
                 </div>
                 <div class="content__layout1p3">
                     <div class="content__layout1p3Header">  
                         <p class="content__layout1p3HeaderP">Chỉnh sửa</p>
                     </div>
                     <div class="content__layout1p3Form">
-                        <form class="content__layout1p3FormUpdate" action="#" method="post">
-                            <input class="content__layout1p3Input" type="text" placeholder="Nhập biển số xe">
-                            <input class="content__layout1p3Input" type="text" placeholder="Nhập tình trạng sẵn có">
-                            <input class="content__layout1p3Input" type="text" placeholder="Nhập vị trí hiện tại">                      
-                            <input class="content__layout1p3Btn" type="submit" value="Xác nhận">
+                        <form class="content__layout1p3FormUpdate" action="/suaxe" method="post">
+                            <input class="content__layout1p3Input" type="text" placeholder="Nhập biển số xe" name="bienSo" id="newLicensePlateInput">
+                            <input class="content__layout1p3Input" type="text" placeholder="Nhập tình trạng sẵn có" name="tinhTrang" id="newStatusInput">
+                            <input class="content__layout1p3Input" type="text" placeholder="Nhập vị trí hiện tại" name="viTriHienTai" id="newLocationInput">                      
+                            <input class="content__layout1p3Btn" type="submit" onclick="updateCar()" value="Xác nhận">
                         </form>
+                        <script>
+                          function updateCar() {
+                            const carCode = document.getElementById('carCodeInput').value;
+                            const bienSo = document.getElementById('newLicensePlateInput').value;
+                            const tinhTrang = document.getElementById('newStatusInput').value;
+                            const viTriHienTai = document.getElementById('newLocationInput').value;
+                            // Gửi yêu cầu xóa xe đến máy chủ
+                            $.ajax({
+                              url: '/suaxe',
+                              type: 'POST',
+                              data: { 
+                                carCode: carCode, 
+                                bienSo: bienSo, 
+                                tinhTrang: tinhTrang, 
+                                viTriHienTai: viTriHienTai
+                              },
+                              success: function(response) {
+                                // Không hiển thị thông báo
+                              },
+                              error: function() {
+                                // Xảy ra lỗi trong quá trình gửi yêu cầu
+                                alert('Đã xảy ra lỗi');
+                              }
+                            });
+                          }
+                        </script> 
                     </div>
                 </div>
             </div>
