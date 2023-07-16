@@ -124,7 +124,7 @@
                     <div class="submition_contentFooter">
                       <form class="content__layout1p1SearchForm" action="/xoaxe" method="post">
                         <button class="content__layout1p1BtnSubmit31" type="submit" onclick="deleteCar()">Có</button>
-                        <button class="content__layout1p1BtnSubmit32">Không</button>
+                        <button class="content__layout1p1BtnSubmit32" onclick="event.preventDefault();">Không</button>
                       </form>
                       <script>
                         function deleteCar() {
@@ -143,6 +143,13 @@
                             }
                           });
                         }
+                        function cancelDelete() {
+            // Ngăn chặn sự kiện mặc định của form (chuyển hướng trang)
+            event.preventDefault();
+            // Đóng bảng submition
+            const submit = document.querySelector('.submition');
+            submit.classList.remove('open');
+          }
                       </script>                                         
                     </div>
                 </div> 
@@ -185,6 +192,7 @@
                 <thead>
                   <tr>
                       <th>Hãng xe</th>
+                      <th>Mã xe</th>
                       <th>Loại xe</th>
                       <th>Số chỗ ngồi</th>
                       <th>Năm sản xuất</th>
@@ -264,6 +272,7 @@
         // Thêm dữ liệu mới vào bảng
         const row = carTableBody.insertRow();
         row.insertCell().textContent = car.HangXe;
+        row.insertCell().textContent = car.MaXe;
         row.insertCell().textContent = car.LoaiXe;
         row.insertCell().textContent = car.SoChoNgoi;
         row.insertCell().textContent = car.NamSanXuat;
@@ -283,8 +292,8 @@
                     </div>
     
                     <div class="content__layout1p3">
-                        <form class="content__layout1p1SearchForm2" action="#" method="get">               
-                            <button class="js-delete">Xóa</button>
+                        <form class="content__layout1p1SearchForm2" action="#" method="get" onsubmit="event.preventDefault();">               
+                            <button class="js-delete" >Xóa</button>
                         </form>
                     </div>
                 </div>

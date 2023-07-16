@@ -124,7 +124,7 @@ app.post('/themxe', (req, res) => {
   const soChoNgoi = req.body.soChoNgoi;
   const viTriHienTai = req.body.viTriHienTai;
   // Thực hiện truy vấn SQL để thêm thông tin xe vào cơ sở dữ liệu
-  const query = `INSERT INTO Xe (TinhTrang ,HangXe, LoaiXe, NamSanXuat, BienSo, NguyenLieu, SoKmDaDi, SoChoNgoi, ViTriHienTai) VALUES (N'Chưa thuê','${hangXe}', '${loaiXe}', '${namSanXuat}', '${bienSo}', '${nguyenLieu}', '${soKmDaDi}', '${soChoNgoi}', '${viTriHienTai}')`;
+  const query = `INSERT INTO Xe (TinhTrang ,HangXe, LoaiXe, NamSanXuat, BienSo, NguyenLieu, SoKmDaDi, SoChoNgoi, ViTriHienTai) VALUES (N'Chưa thuê',N'${hangXe}', N'${loaiXe}', N'${namSanXuat}', N'${bienSo}', N'${nguyenLieu}', N'${soKmDaDi}', N'${soChoNgoi}', N'${viTriHienTai}')`;
   sql.query(query)
     .then(() => {
       // Trả về mã trạng thái 200 để chỉ rằng thêm xe thành công
@@ -197,7 +197,7 @@ app.post('/suaxe', (req, res) => {
   const viTriHienTai = req.body.viTriHienTai;
   
   // Thực hiện truy vấn SQL để sửa thông tin xe trong cơ sở dữ liệu
-  const query = `UPDATE Xe SET BienSo='${bienSo}', TinhTrang='${tinhTrang}', ViTriHienTai='${viTriHienTai}' WHERE MaXe='${carCode}'`;
+  const query = `UPDATE Xe SET BienSo=N'${bienSo}', TinhTrang=N'${tinhTrang}', ViTriHienTai=N'${viTriHienTai}' WHERE MaXe=N'${carCode}'`;
   sql.query(query)
     .then(() => {
       // Trả về mã trạng thái 200 để chỉ rằng sửa xe thành công
@@ -206,6 +206,215 @@ app.post('/suaxe', (req, res) => {
     .catch(error => {
       res.send('Sửa thất bại');
     });
+});
+// Quan ly thue xe
+// Tim kiem hoa don
+app.get('/timhoadon', (req, res) => {
+  const MaHoaDon = req.query.BillID;
+
+  const query = `SELECT * FROM QuanLyHoaDon WHERE MaHoaDon LIKE '%${MaHoaDon}%'`;
+
+  sql.query(query)
+    .then((result) => {
+      res.json(result.recordset);
+    })
+    .catch((error) => {
+      console.log('Error executing SQL query:', error);
+      res.status(500).send('Internal Server Error');
+    });
+});
+//Tim thong tin thue xe
+app.get('/timthongtinthuexe', (req, res) => {
+  // Lấy tên khách hàng từ yêu cầu của người dùng
+  const customerName = req.query.customerName;
+
+  // Thực hiện truy vấn SQL để tìm thông tin thuê xe dựa trên tên khách hàng
+  const query = `SELECT CONCAT(KhachHang.Ho, ' ', KhachHang.Ten) AS HoTen,
+                        KhachHang.SoDienThoai,
+                        KhachHang.Email,
+                        KhachHang.MaKhachHang,
+                        QuanLyThueXe.MaXe,
+                        QuanLyThueXe.MaThue,
+                        QuanLyThueXe.DiaDiemNhanXe,
+                        QuanLyThueXe.DiaDiemTraXe,
+                        QuanLyThueXe.NgayBatDau,
+                        QuanLyThueXe.NgayKetThuc
+                FROM KhachHang
+                INNER JOIN QuanLyThueXe ON KhachHang.MaKhachHang = QuanLyThueXe.MaKhachHang
+                WHERE CONCAT(KhachHang.Ho, ' ', KhachHang.Ten) LIKE N'%${customerName}%'`;
+
+  sql.query(query)
+    .then(result => {
+      // Gửi kết quả về cho máy khách
+      res.json(result.recordset);
+    })
+    .catch(error => {
+      console.log('Error executing SQL query:', error);
+      res.status(500).send('Internal Server Error');
+    });
+});
+// Them thong tin thue xe
+app.post('/themthongtindatxe', (req, res) => {
+  // Lấy thông tin đặt xe từ yêu cầu POST
+  const maKH = req.body.maKH;
+  const maXe = req.body.maXe;
+  const diemNhanXe = req.body.diemNhanXe;
+  const diemTraXe = req.body.diemTraXe;
+  const ngayBatDau = convertDateFormat(req.body.ngayBatDau);
+  const ngayKetThuc = convertDateFormat(req.body.ngayKetThuc);
+  function convertDateFormat(inputDate) {
+    // Tách ngày, tháng và năm từ input
+    const parts = inputDate.split('/');
+    const day = parts[0];
+    const month = parts[1];
+    const year = parts[2];
+
+    // Tạo định dạng mới "yyyy-mm-dd"
+    const convertedDate = `${year}-${month}-${day}`;
+
+    return convertedDate;
+    }
+  // Thực hiện truy vấn SQL để thêm thông tin đặt xe vào cơ sở dữ liệu
+  const query = `INSERT INTO QuanLyThueXe (MaKhachHang, MaXe, DiaDiemNhanXe, DiaDiemTraXe, NgayBatDau, NgayKetThuc) 
+                 VALUES (N'${maKH}', N'${maXe}', N'${diemNhanXe}', N'${diemTraXe}', '${ngayBatDau}', '${ngayKetThuc}')`;
+  sql.query(query)
+    .then(() => {
+      // Trả về mã trạng thái 200 để chỉ rằng thêm thông tin đặt xe thành công
+      res.send('Đặt xe thành công');
+    })
+    .catch(error => {
+      res.send('Đặt xe thất bại');
+      console.log(error);
+    });
+});
+//Tim thong tin thue xe de xoa
+app.get('/timmathue', (req, res) => {
+  // Lấy tên khách hàng từ yêu cầu của người dùng
+  const rentalCode = req.query.rentalCode;
+
+  // Thực hiện truy vấn SQL để tìm thông tin thuê xe dựa trên tên khách hàng
+  const query = `SELECT CONCAT(KhachHang.Ho, ' ', KhachHang.Ten) AS HoTen,
+                        KhachHang.SoDienThoai,
+                        KhachHang.Email,
+                        KhachHang.MaKhachHang,
+                        QuanLyThueXe.MaXe,
+                        QuanLyThueXe.DiaDiemNhanXe,
+                        QuanLyThueXe.DiaDiemTraXe,
+                        QuanLyThueXe.NgayBatDau,
+                        QuanLyThueXe.NgayKetThuc
+                FROM KhachHang
+                INNER JOIN QuanLyThueXe ON KhachHang.MaKhachHang = QuanLyThueXe.MaKhachHang
+                WHERE MaThue LIKE N'%${rentalCode}%'`;
+
+  sql.query(query)
+    .then(result => {
+      // Gửi kết quả về cho máy khách
+      res.json(result.recordset);
+    })
+    .catch(error => {
+      console.log('Error executing SQL query:', error);
+      res.status(500).send('Internal Server Error');
+    });
+});
+// Xoa thong tin xe
+app.post('/xoathongtinthuexe', (req, res) => {
+  const rentalCode = req.body.rentalCode;
+
+  // Thực hiện truy vấn SQL để xóa thông tin xe từ cơ sở dữ liệu dựa trên mã xe
+  const query = `DELETE FROM QuanLyThueXe WHERE MaThue='${rentalCode}'`;
+  sql.query(query)
+  .then(() => {
+    // Trả về mã trạng thái 200 để chỉ rằng xóa xe thành công
+    res.send('Xóa thành công');
+  })
+  .catch(error => {
+    res.send('Xóa thất bại');
+  });
+});
+//Tim thong tin thue xe de sua
+app.get('/timmathue', (req, res) => {
+  // Lấy tên khách hàng từ yêu cầu của người dùng
+  const rentalCode = req.query.rentalCode;
+
+  // Thực hiện truy vấn SQL để tìm thông tin thuê xe dựa trên tên khách hàng
+  const query = `SELECT CONCAT(KhachHang.Ho, ' ', KhachHang.Ten) AS HoTen,
+                        KhachHang.SoDienThoai,
+                        KhachHang.Email,
+                        KhachHang.MaKhachHang,
+                        QuanLyThueXe.MaXe,
+                        QuanLyThueXe.DiaDiemNhanXe,
+                        QuanLyThueXe.DiaDiemTraXe,
+                        QuanLyThueXe.NgayBatDau,
+                        QuanLyThueXe.NgayKetThuc
+                FROM KhachHang
+                INNER JOIN QuanLyThueXe ON KhachHang.MaKhachHang = QuanLyThueXe.MaKhachHang
+                WHERE MaThue LIKE N'%${rentalCode}%'`;
+
+  sql.query(query)
+    .then(result => {
+      // Gửi kết quả về cho máy khách
+      res.json(result.recordset);
+    })
+    .catch(error => {
+      console.log('Error executing SQL query:', error);
+      res.status(500).send('Internal Server Error');
+    });
+});
+//Sua thong tin thue xe
+app.post('/suathongtinthuexe', (req, res) => {
+  // Lấy thông tin xe từ yêu cầu POST
+  const rentalCode = req.body.rentalCode;
+  const maKH = req.body.maKH;
+  const maXe = req.body.maXe;
+  const diemNhanXe = req.body.diemNhanXe;
+  const diemTraXe = req.body.diemTraXe;
+  const ngayBatDau = convertDateFormat(req.body.ngayBatDau);
+  const ngayKetThuc = convertDateFormat(req.body.ngayKetThuc);
+  function convertDateFormat(inputDate) {
+    // Tách ngày, tháng và năm từ input
+    const parts = inputDate.split('/');
+    const day = parts[0];
+    const month = parts[1];
+    const year = parts[2];
+    // Tạo định dạng mới "yyyy-mm-dd"
+    const convertedDate = `${year}-${month}-${day}`;
+
+    return convertedDate;
+    }
+  // Thực hiện truy vấn SQL để sửa thông tin xe trong cơ sở dữ liệu
+  const query = `UPDATE QuanLyThueXe SET MaKhachHang=N'${maKH}', MaXe=N'${maXe}', DiaDiemNhanXe=N'${diemNhanXe}',DiaDiemTraXe=N'${diemTraXe}',NgayBatDau=N'${ngayBatDau}',NgayKetThuc=N'${ngayKetThuc}' 
+  WHERE MaThue=N'${rentalCode}'`;
+  sql.query(query)
+    .then(() => {
+      // Trả về mã trạng thái 200 để chỉ rằng sửa xe thành công
+      res.send('Sửa thành công');
+    })
+    .catch(error => {
+      res.send('Sửa thất bại');
+    });
+});
+app.post('/login', async (req, res) => {
+  const username = req.body.username;
+  const password = req.body.password;
+
+  try {
+    const pool = await sql.connect(config);
+
+    const query = `SELECT * FROM Users WHERE Username = @username AND Password = @password`;
+    const result = await pool.request()
+      .input('username', sql.NVarChar, username)
+      .input('password', sql.NVarChar, password)
+      .query(query);
+
+    if (result.recordset.length > 0) {
+      res.send({ success: true });
+    } else {
+      res.send({ success: false });
+    }
+  } catch (error) {
+    console.error('Error checking login:', error);
+    res.send({ success: false });
+  }
 });
 // Khởi động máy chủ
 app.listen(3000, () => {

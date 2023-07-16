@@ -149,6 +149,7 @@
                 <thead>
                   <tr>
                       <th>Hãng xe</th>
+                      <th>Mã xe</th>
                       <th>Loại xe</th>
                       <th>Số chỗ ngồi</th>
                       <th>Năm sản xuất</th>
@@ -228,6 +229,7 @@
         // Thêm dữ liệu mới vào bảng
         const row = carTableBody.insertRow();
         row.insertCell().textContent = car.HangXe;
+        row.insertCell().textContent = car.MaXe;
         row.insertCell().textContent = car.LoaiXe;
         row.insertCell().textContent = car.SoChoNgoi;
         row.insertCell().textContent = car.NamSanXuat;

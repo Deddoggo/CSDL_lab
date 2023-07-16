@@ -13,6 +13,38 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap&subset=vietnamese" rel="stylesheet">
     <title>Search Rent Car</title>
+    <!-- - them jquery --->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <style>
+      /* Định dạng bảng */
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 0 auto; /* Căn giữa bảng */
+        overflow-x: auto;
+      }
+  
+      /* Định dạng hàng đầu tiên (tiêu đề cột) */
+      thead th {
+        background-color: #33b0b9;
+        font-weight: bold;
+        padding: 12px; /* Tăng kích thước padding */
+        text-align: left;
+      }
+  
+      /* Định dạng các ô dữ liệu */
+      tbody td {
+        border: 1px solid #ddd;
+        padding: 12px; /* Tăng kích thước padding */
+        background-color: #ffffff74;
+      }
+  
+      /* Định dạng các ô dữ liệu đặc biệt (ví dụ: cột đầu tiên) */
+      tbody td:first-child {
+        font-weight: bold;
+      }
+    </style>
 </head>
 <body>
   <div class="header">
@@ -101,14 +133,118 @@
       </div>
       <div class="content__main">
         <div class="content__layout1">
-            <div class="content__layout1p1">
-                <form class="content__layout1p1SearchForm" action="#" method="get">
-                    <input class="content__layout1p1SearchArea" type="text" placeholder="Nhập tên khách hàng">
-                    <input class="content__layout1p1BtnSubmit" type="submit" value="Tìm kiếm">
-                </form>
-            </div>
-            <div class="content__layout1p2">
-
+          <div class="content__layout1p1">
+            <form class="content__layout1p1SearchForm" action="#" method="get">
+              <input class="content__layout1p1SearchArea" type="text" id="customerNameInput" placeholder="Nhập tên khách hàng">
+              <input class="content__layout1p1BtnSubmit" type="button" value="Tìm kiếm" onclick="searchCustomersByName()">
+            </form>
+          </div>
+          <div class="content__layout1p2">
+            <table id="customerTable" class="hidden">
+              <thead>
+                <tr>
+                  <th>Họ tên</th>
+                  <th>Số điện thoại</th>
+                  <th>Email</th>
+                  <th>Mã khách hàng</th>
+                  <th>Mã xe</th>
+                  <th>Mã thuê</th>
+                  <th>Địa điểm nhận xe</th>
+                  <th>Địa điểm trả xe</th>
+                  <th>Ngày bắt đầu</th>
+                  <th>Ngày kết thúc</th>
+                </tr>
+              </thead>
+              <tbody id="customerTableBody"></tbody>
+            </table>
+          
+          <!-- Định nghĩa các style cho bảng và thông báo -->
+          <style>
+            .hidden {
+              display: none;
+            }
+            .no-match-message {
+              color: red;
+              font-size: 24px;
+              font-weight: bold;
+              overflow-x: 12px;
+              padding-top: 10px;
+              padding-right: 20px;
+              text-align: center;
+            }
+            .blank-message {
+              color: red;
+              font-size: 24px;
+              font-weight: bold;
+              overflow-x: 12px;
+              padding-top: 10px;
+              padding-right: 20px;
+              text-align: center;
+            }
+          </style>
+          
+          <p id="noMatchMessage" class="no-match-message" style="display: none;">Không có khách hàng khớp với tên bạn nhập</p>
+          <p id="blankmessage" class="blank-message" style="display: none;">Không được để trống ô tìm kiếm</p>
+          <script>
+            //Khai bao ham chuyen format ngay thang
+            function formatDate(dateString) {
+const options = { year: 'numeric', month: 'numeric', day: 'numeric' };
+const date = new Date(dateString);
+return date.toLocaleDateString('vi-VN', options);
+}
+          </script>
+          <script>
+          function searchCustomersByName() {
+            const customerName = document.getElementById('customerNameInput').value;
+            // Gửi yêu cầu truy vấn với tên khách hàng đã nhập
+            fetch(`/timthongtinthuexe?customerName=${customerName}`)
+              .then(response => response.json())
+              .then(customers => {
+                const noMatchMessage = document.getElementById('noMatchMessage');
+                const customerTable = document.getElementById('customerTable');
+                const customerTableBody = document.getElementById('customerTableBody');
+          
+                // Xóa các hàng cũ trong bảng
+                while (customerTableBody.firstChild) {
+                  customerTableBody.removeChild(customerTableBody.firstChild);
+                }
+          
+                if (customers.length === 0) {
+                  // Không có khách hàng khớp, hiển thị thông báo và ẩn bảng
+                  noMatchMessage.style.display = 'block';
+                  customerTable.style.display = 'none';
+                  blankmessage.style.display = 'none';
+                } else if (customerName === '') {
+                  blankmessage.style.display = 'block';
+                  customerTable.style.display = 'none';
+                  noMatchMessage.style.display = 'none';
+                } else {
+                  // Có khách hàng khớp, ẩn thông báo và hiển thị bảng
+                  noMatchMessage.style.display = 'none';
+                  customerTable.style.display = 'table';
+                  blankmessage.style.display = 'none';
+                  customers.forEach(customer => {
+                    // Thêm dữ liệu mới vào bảng
+                    const row = customerTableBody.insertRow();
+                    row.insertCell().textContent = customer.HoTen;
+                    row.insertCell().textContent = customer.SoDienThoai;
+                    row.insertCell().textContent = customer.Email;
+                    row.insertCell().textContent = customer.MaKhachHang;
+                    row.insertCell().textContent = customer.MaXe;
+                    row.insertCell().textContent = customer.MaThue;
+                    row.insertCell().textContent = customer.DiaDiemNhanXe;
+                    row.insertCell().textContent = customer.DiaDiemTraXe;
+                    row.insertCell().textContent = formatDate(customer.NgayBatDau);
+                    row.insertCell().textContent = formatDate(customer.NgayKetThuc);
+                  });
+                }
+              })
+              .catch(error => {
+                console.log('Error searching customers:', error);
+              });
+          }
+          </script>
+          
             </div>
         </div>
       </div>

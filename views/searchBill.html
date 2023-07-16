@@ -13,6 +13,38 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap&subset=vietnamese" rel="stylesheet">
     <title>Search Bill</title>
+    <!-- - them jquery --->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <style>
+      /* Định dạng bảng */
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 0 auto; /* Căn giữa bảng */
+        overflow-x: auto;
+      }
+  
+      /* Định dạng hàng đầu tiên (tiêu đề cột) */
+      thead th {
+        background-color: #33b0b9;
+        font-weight: bold;
+        padding: 12px; /* Tăng kích thước padding */
+        text-align: left;
+      }
+  
+      /* Định dạng các ô dữ liệu */
+      tbody td {
+        border: 1px solid #ddd;
+        padding: 12px; /* Tăng kích thước padding */
+        background-color: #ffffff74;
+      }
+  
+      /* Định dạng các ô dữ liệu đặc biệt (ví dụ: cột đầu tiên) */
+      tbody td:first-child {
+        font-weight: bold;
+      }
+    </style>
 </head>
 <body>
   <div class="header">
@@ -101,14 +133,112 @@
       </div>
       <div class="content__main">
         <div class="content__layout1">
-            <div class="content__layout1p1">
-                <form class="content__layout1p1SearchForm" action="#" method="get">
-                    <input class="content__layout1p1SearchArea" type="text" placeholder="Nhập mã hóa đơn">
-                    <input class="content__layout1p1BtnSubmit" type="submit" value="Tìm kiếm">
-                </form>
-            </div>
-            <div class="content__layout1p2">
-
+          <div class="content__layout1p1">
+            <form class="content__layout1p1SearchForm" action="#" method="get">
+                <input class="content__layout1p1SearchArea" id="BillIDInput" type="text" placeholder="Nhập mã hóa đơn (mã hóa đơn có dạng MHD000000000)">
+                <input class="content__layout1p1BtnSubmit" type="button" value="Tìm kiếm" onclick="searchBillsbyCode()">
+            </form>
+        </div>
+        
+        <div class="content__layout1p2">
+            <table id="billTable" class="hidden">
+                <thead>
+                    <tr>
+                        <th>Mã hóa đơn</th>
+                        <th>Mã thuê</th>
+                        <th>Tiền thanh toán</th>
+                        <th>Phương thức thanh toán</th>
+                        <th>Ngày thanh toán</th>
+                    </tr>
+                </thead>
+                <tbody id="billTableBody"></tbody>
+            </table>
+        
+            <!-- Định nghĩa các style cho bảng và thông báo -->
+            <style>
+                .hidden {
+                    display: none;
+                }
+        
+                .no-match-message {
+                    color: red;
+                    font-size: 24px;
+                    font-weight: bold;
+                    overflow-x: 12px;
+                    padding-top: 10px;
+                    padding-right: 20px;
+                    text-align: center;
+                }
+        
+                .blank-message {
+                    color: red;
+                    font-size: 24px;
+                    font-weight: bold;
+                    overflow-x: 12px;
+                    padding-top: 10px;
+                    padding-right: 20px;
+                    text-align: center;
+                }
+            </style>
+        
+            <p id="noMatchMessage" class="no-match-message" style="display: none;">Không có hóa đơn khớp với mã bạn nhập</p>
+            <p id="blankmessage" class="blank-message" style="display: none;">Không được để trống ô tìm kiếm</p>
+            <script>
+              //Khai bao ham chuyen format ngay thang
+              function formatDate(dateString) {
+  const options = { year: 'numeric', month: 'numeric', day: 'numeric' };
+  const date = new Date(dateString);
+  return date.toLocaleDateString('vi-VN', options);
+}
+            </script>
+            <script>
+                function searchBillsbyCode() {
+                    const BillID = document.getElementById('BillIDInput').value;
+        
+                    // Gửi yêu cầu truy vấn với mã hóa đơn đã nhập
+                    fetch(`/timhoadon?BillID=${BillID}`)
+                        .then(response => response.json())
+                        .then(bills => {
+                            const noMatchMessage = document.getElementById('noMatchMessage');
+                            const billTable = document.getElementById('billTable');
+                            const billTableBody = document.getElementById('billTableBody');
+        
+                            // Xóa các hàng cũ trong bảng
+                            while (billTableBody.firstChild) {
+                                billTableBody.removeChild(billTableBody.firstChild);
+                            }
+        
+                            if (bills.length === 0) {
+                                // Không có hóa đơn khớp, hiển thị thông báo và ẩn bảng
+                                noMatchMessage.style.display = 'block';
+                                billTable.style.display = 'none';
+                                blankmessage.style.display = 'none';
+                            } else if (BillID === '') {
+                                blankmessage.style.display = 'block';
+                                billTable.style.display = 'none';
+                                noMatchMessage.style.display = 'none';
+                            } else {
+                                // Có hóa đơn khớp, ẩn thông báo và hiển thị bảng
+                                noMatchMessage.style.display = 'none';
+                                billTable.style.display = 'table';
+                                blankmessage.style.display = 'none';
+                                bills.forEach(bill => {
+                                    // Thêm dữ liệu mới vào bảng
+                                    const row = billTableBody.insertRow();
+                                    row.insertCell().textContent = bill.MaHoaDon;
+                                    row.insertCell().textContent = bill.MaThue;
+                                    row.insertCell().textContent = bill.TienThanhToan;
+                                    row.insertCell().textContent = bill.PhuongThucThanhToan;
+                                    row.insertCell().textContent = formatDate(bill.NgayThanhToan);
+                                });
+                            }
+                        })
+                        .catch(error => {
+                            console.log('Error searching bills:', error);
+                        });
+                }
+            </script>
+        </div>                      
             </div>
         </div>
       </div>

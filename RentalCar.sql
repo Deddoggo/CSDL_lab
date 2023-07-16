@@ -133,21 +133,22 @@ CREATE TABLE BaoDuongXe (
     NgayBaoDuongTiepTheo DATETIME,
     BaoDuongGi NVARCHAR(100),
     VanDeBaoCao NVARCHAR(100),
+    TienBaoDuong DECIMAL(18, 2);
     FOREIGN KEY (MaXe) REFERENCES Xe(MaXe)
 );
 
-INSERT INTO BaoDuongXe (MaXe, NgayBaoDuongTruocDo, NgayBaoDuongTiepTheo, BaoDuongGi, VanDeBaoCao)
+INSERT INTO BaoDuongXe (MaXe, NgayBaoDuongTruocDo, NgayBaoDuongTiepTheo, BaoDuongGi, VanDeBaoCao,TienBaoDuong)
 VALUES
-    ('MX00001', '2022-12-01', '2023-06-01', N'Bảo dưỡng định kỳ', N'Lốp xe'),
-    ('MX00002', '2022-11-25', '2023-05-25', N'Bảo dưỡng định kỳ', N'Phanh xe'),
-    ('MX00003', '2022-10-15', '2023-04-15', N'Bảo dưỡng định kỳ', N'Đèn xe'),
-    ('MX00004', '2022-09-20', '2023-03-20', N'Bảo dưỡng định kỳ', N'Hệ thống nhiên liệu'),
-    ('MX00005', '2022-08-05', '2023-02-05', N'Bảo dưỡng định kỳ', N'Máy lạnh'),
-    ('MX00006', '2022-07-12', '2023-01-12', N'Bảo dưỡng định kỳ', N'Hệ thống treo'),
-    ('MX00007', '2022-06-22', '2022-12-22', N'Bảo dưỡng định kỳ', N'Hệ thống điều khiển'),
-    ('MX00008', '2022-05-18', '2022-11-18', N'Bảo dưỡng định kỳ', N'Hệ thống làm mát'),
-    ('MX00009', '2022-04-30', '2022-10-30', N'Bảo dưỡng định kỳ', N'Hệ thống phanh'),
-    ('MX00010', '2022-03-15', '2022-09-15', N'Bảo dưỡng định kỳ', N'Hệ thống điện');
+    ('MX00001', '2022-12-01', '2023-06-01', N'Bảo dưỡng định kỳ', N'Lốp xe',450000 ),
+    ('MX00002', '2022-11-25', '2023-05-25', N'Bảo dưỡng định kỳ', N'Phanh xe', 700000),
+    ('MX00003', '2022-10-15', '2023-04-15', N'Bảo dưỡng định kỳ', N'Đèn xe', 550000),
+    ('MX00004', '2022-09-20', '2023-03-20', N'Bảo dưỡng định kỳ', N'Hệ thống nhiên liệu', 800000),
+    ('MX00005', '2022-08-05', '2023-02-05', N'Bảo dưỡng định kỳ', N'Máy lạnh', 500000 ),
+    ('MX00006', '2022-07-12', '2023-01-12', N'Bảo dưỡng định kỳ', N'Hệ thống treo', 750000 ),
+    ('MX00007', '2022-06-22', '2022-12-22', N'Bảo dưỡng định kỳ', N'Hệ thống điều khiển', 600000),
+    ('MX00008', '2022-05-18', '2022-11-18', N'Bảo dưỡng định kỳ', N'Hệ thống làm mát', 650000),
+    ('MX00009', '2022-04-30', '2022-10-30', N'Bảo dưỡng định kỳ', N'Hệ thống phanh', 750000),
+    ('MX00010', '2022-03-15', '2022-09-15', N'Bảo dưỡng định kỳ', N'Hệ thống điện', 850000);
 
 -- Tạo bảng Báo cáo
 CREATE TABLE BaoCao (
@@ -182,13 +183,13 @@ CREATE TABLE Users (
 
 INSERT INTO Users (Username, Password, ChucVu, LichSuDangNhap, LichSuThayDoiMatKhau)
 VALUES
-    ('user1', 'password1', N'Nhân viên', '2023-06-01 09:30:00', '2023-06-01 09:30:00'),
-    ('user2', 'password2', N'Quản lý', '2023-06-01 08:45:00', '2023-06-01 08:45:00'),
-    ('user3', 'password3', N'Nhân viên', '2023-06-02 10:15:00', '2023-06-02 10:15:00'),
-    ('user4', 'password4', N'Quản lý', '2023-06-03 11:20:00', '2023-06-03 11:20:00'),
+    ('user1', 'password1', N'Giám đốc', '2023-06-01 09:30:00', '2023-06-01 09:30:00'),
+    ('user2', 'password2', N'Quản lý nhân viên', '2023-06-01 08:45:00', '2023-06-01 08:45:00'),
+    ('user3', 'password3', N'Quản lý khách hàng', '2023-06-02 10:15:00', '2023-06-02 10:15:00'),
+    ('user4', 'password4', N'Quản lý xe', '2023-06-03 11:20:00', '2023-06-03 11:20:00'),
     ('user5', 'password5', N'Nhân viên', '2023-06-04 14:30:00', '2023-06-04 14:30:00'),
-    ('user6', 'password6', N'Quản lý', '2023-06-05 13:15:00', '2023-06-05 13:15:00'),
+    ('user6', 'password6', N'Nhân viên', '2023-06-05 13:15:00', '2023-06-05 13:15:00'),
     ('user7', 'password7', N'Nhân viên', '2023-06-06 10:45:00', '2023-06-06 10:45:00'),
-    ('user8', 'password8', N'Quản lý', '2023-06-07 12:30:00', '2023-06-07 12:30:00'),
+    ('user8', 'password8', N'Nhân viên', '2023-06-07 12:30:00', '2023-06-07 12:30:00'),
     ('user9', 'password9', N'Nhân viên', '2023-06-08 09:10:00', '2023-06-08 09:10:00'),
-    ('user10', 'password10', N'Quản lý', '2023-06-09 11:45:00', '2023-06-09 11:45:00');
+    ('user10', 'password10', N'Nhân viên', '2023-06-09 11:45:00', '2023-06-09 11:45:00');

@@ -13,6 +13,38 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap&subset=vietnamese" rel="stylesheet">
     <title>Update Rent Car</title>
+    <!-- - them jquery --->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <style>
+      /* Định dạng bảng */
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 0 auto; /* Căn giữa bảng */
+        overflow-x: auto;
+      }
+  
+      /* Định dạng hàng đầu tiên (tiêu đề cột) */
+      thead th {
+        background-color: #33b0b9;
+        font-weight: bold;
+        padding: 12px; /* Tăng kích thước padding */
+        text-align: left;
+      }
+  
+      /* Định dạng các ô dữ liệu */
+      tbody td {
+        border: 1px solid #ddd;
+        padding: 12px; /* Tăng kích thước padding */
+        background-color: #ffffff74;
+      }
+  
+      /* Định dạng các ô dữ liệu đặc biệt (ví dụ: cột đầu tiên) */
+      tbody td:first-child {
+        font-weight: bold;
+      }
+    </style>
 </head>
 <body>
     <!-- Begin header -->
@@ -105,27 +137,162 @@
             <div class="content__layout1">
                 <div class="content__layout1p1">
                     <form class="content__layout1p1SearchForm" action="#" method="get">
-                        <input class="content__layout1p1SearchArea" type="text" placeholder="Nhập mã đặt xe">
-                        <input class="content__layout1p1BtnSubmit" type="submit" value="Tìm kiếm">
+                      <input class="content__layout1p1SearchArea" name="rentalCode" id="rentalCodeInput" type="text" placeholder="Nhập mã thuê ( mã thuê có dạng MT0000000 )">
+                      <input class="content__layout1p1BtnSubmit" type="button" value="Tìm kiếm" onclick="searchRentalByCode()">
                     </form>
                 </div>
                 <div class="content__layout1p2">
-                        
+                        <!-- - Doan code de lay du lieu tu localhost:3000/data va hien thi len page -->
+
+                        <table id="rentalTable" class="hidden">
+                          <thead>
+                            <tr>
+                              <th>Họ tên</th>
+                              <th>Số điện thoại</th>
+                              <th>Email</th>
+                              <th>Mã khách hàng</th>
+                              <th>Mã xe</th>
+                              <th>Địa điểm nhận xe</th>
+                              <th>Địa điểm trả xe</th>
+                              <th>Ngày bắt đầu</th>
+                              <th>Ngày kết thúc</th>
+                            </tr>
+                          </thead>
+                          <tbody id="rentalTableBody"></tbody>
+                        </table>
+                      
+                      <!-- Định nghĩa các style cho bảng và thông báo -->
+                      <style>
+                        .hidden {
+                          display: none;
+                        }
+                        .no-match-message {
+                          color: red;
+                          font-size: 24px;
+                          font-weight: bold;
+                          overflow-x: 12px;
+                          padding-top: 10px;
+                          padding-right: 20px;
+                          text-align: center;
+                        }
+                        .blank-message {
+                          color: red;
+                          font-size: 24px;
+                          font-weight: bold;
+                          overflow-x: 12px;
+                          padding-top: 10px;
+                          padding-right: 20px;
+                          text-align: center;
+                        }
+                      </style>
+                      
+                      <p id="noMatchMessage" class="no-match-message" style="display: none;">Không có mã thuê khớp với mã bạn nhập</p>
+                      <p id="blankmessage" class="blank-message" style="display: none;">Không được để trống ô tìm kiếm</p>
+                      <script>
+                        //Khai bao ham chuyen format ngay thang
+                        function formatDate(dateString) {
+            const options = { year: 'numeric', month: 'numeric', day: 'numeric' };
+            const date = new Date(dateString);
+            return date.toLocaleDateString('vi-VN', options);
+          }
+                      </script>
+                      <script>
+                      function searchRentalByCode() {
+                        const rentalCode = document.getElementById('rentalCodeInput').value;
+                        // Gửi yêu cầu truy vấn với tên khách hàng đã nhập
+                        fetch(`/timmathue?rentalCode=${rentalCode}`)
+                          .then(response => response.json())
+                          .then(rentals => {
+                            const noMatchMessage = document.getElementById('noMatchMessage');
+                            const rentalTable = document.getElementById('rentalTable');
+                            const rentalTableBody = document.getElementById('rentalTableBody');
+                      
+                            // Xóa các hàng cũ trong bảng
+                            while (rentalTableBody.firstChild) {
+                              rentalTableBody.removeChild(rentalTableBody.firstChild);
+                            }
+                      
+                            if (rentals.length === 0) {
+                              // Không có khách hàng khớp, hiển thị thông báo và ẩn bảng
+                              noMatchMessage.style.display = 'block';
+                              rentalTable.style.display = 'none';
+                              blankmessage.style.display = 'none';
+                            } else if (rentalCode === '') {
+                              blankmessage.style.display = 'block';
+                              rentalTable.style.display = 'none';
+                              noMatchMessage.style.display = 'none';
+                            } else {
+                              // Có khách hàng khớp, ẩn thông báo và hiển thị bảng
+                              noMatchMessage.style.display = 'none';
+                              rentalTable.style.display = 'table';
+                              blankmessage.style.display = 'none';
+                              rentals.forEach(rental => {
+                                // Thêm dữ liệu mới vào bảng
+                                const row = rentalTableBody.insertRow();
+                                row.insertCell().textContent = rental.HoTen;
+                                row.insertCell().textContent = rental.SoDienThoai;
+                                row.insertCell().textContent = rental.Email;
+                                row.insertCell().textContent = rental.MaKhachHang;
+                                row.insertCell().textContent = rental.MaXe;
+                                row.insertCell().textContent = rental.DiaDiemNhanXe;
+                                row.insertCell().textContent = rental.DiaDiemTraXe;
+                                row.insertCell().textContent = formatDate(rental.NgayBatDau);
+                                row.insertCell().textContent = formatDate(rental.NgayKetThuc);
+                              });
+                            }
+                          })
+                          .catch(error => {
+                            console.log('Error searching rentals:', error);
+                          });
+                      }
+                      </script>
                 </div>
                 <div class="content__layout1p3">
                     <div class="content__layout1p3Header">  
                         <p class="content__layout1p3HeaderP">Chỉnh sửa</p>
                     </div>
                     <div class="content__layout1p3Form">
-                        <form class="content__layout1p3FormUpdate" action="#" method="post">
-                            <input class="content__layout1p3Input" type="text" placeholder="Nhập mã khách hàng">
-                            <input class="content__layout1p3Input" type="text" placeholder="Nhập mã xe">
-                            <input class="content__layout1p3Input" type="text" placeholder="Nhập điểm nhận xe">
-                            <input class="content__layout1p3Input" type="text" placeholder="Nhập điểm trả xe">
-                            <input class="content__layout1p3Input" type="text" placeholder="Nhập ngày bắt đầu thuê xe">
-                            <input class="content__layout1p3Input" type="text" placeholder="Nhập ngày kết thúc thuê xe">                
-                            <input class="content__layout1p3Btn" type="submit" value="Xác nhận">
+                        <form class="content__layout1p3FormUpdate" action="/suathongtinthuexe" method="post">
+                            <input class="content__layout1p3Input" type="text" placeholder="Nhập mã khách hàng" name="maKH" id="newCustomerIDInput">
+                            <input class="content__layout1p3Input" type="text" placeholder="Nhập mã xe" name="maXe" id="newCarIDInput">
+                            <input class="content__layout1p3Input" type="text" placeholder="Nhập điểm nhận xe" name="diemNhanXe" id="newPickUpPlaceInput">
+                            <input class="content__layout1p3Input" type="text" placeholder="Nhập điểm trả xe" name="diemTraXe" id="newDropOffPlaceInput">
+                            <input class="content__layout1p3Input" type="text" placeholder="Nhập ngày bắt đầu thuê xe (DD/MM/YYYY)" name="ngayBatDau" id="newStartDayInput">
+                            <input class="content__layout1p3Input" type="text" placeholder="Nhập ngày kết thúc thuê xe (DD/MM/YYYY)" name="ngayKetThuc" id="newEndDayInput">     
+                            <input class="content__layout1p3Btn" type="submit" onclick="updateRental()" value="Xác nhận">
                         </form>
+                        <script>
+                          function updateRental() {
+                            const rentalCode = document.getElementById('rentalCodeInput').value;
+                            const maKH = document.getElementById('newCustomerIDInput').value;
+                            const maXe = document.getElementById('newCarIDInput').value;
+                            const diemNhanXe = document.getElementById('newPickUpPlaceInput').value;
+                            const diemTraXe = document.getElementById('newDropOffPlaceInput').value;
+                            const ngayBatDau = document.getElementById('newStartDayInput').value;
+                            const ngayKetThuc = document.getElementById('newEndDayInput').value;
+                            // Gửi yêu cầu xóa xe đến máy chủ
+                            $.ajax({
+                              url: '/suathongtinthuexe',
+                              type: 'POST',
+                              data: { 
+                                rentalCode: rentalCode, 
+                                maKH: maKH, 
+                                maXe: maXe, 
+                                diemNhanXe: diemNhanXe,
+                                diemTraXe:diemTraXe,
+                                ngayBatDau:ngayBatDau,
+                                ngayKetThuc:ngayKetThuc
+                              },
+                              success: function(response) {
+                                // Không hiển thị thông báo
+                              },
+                              error: function() {
+                                // Xảy ra lỗi trong quá trình gửi yêu cầu
+                                alert('Đã xảy ra lỗi');
+                              }
+                            });
+                          }
+                        </script> 
                     </div>
                 </div>
             </div>
