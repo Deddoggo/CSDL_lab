@@ -106,7 +106,7 @@
                 <p class="content__layout2p1Heading">Thêm thông tin xe</p>
               </div>
               <div class="content__layout2p2">
-                <form class="content__layout2p2Form" action="/themxe" method="post" >
+                <form class="content__layout2p2Form" id="addCarForm" action="/themxe" method="post" >
                     <input class="content__layout2p2Input" type="text" placeholder="Nhập hãng xe" name="hangXe">
                     <input class="content__layout2p2Input" type="text" placeholder="Nhập loại xe" name="loaiXe">
                     <input class="content__layout2p2Input" type="text" placeholder="Nhập năm sản xuất" name="namSanXuat">
@@ -117,6 +117,50 @@
                     <input class="content__layout2p2Input" type="text" placeholder="Nhập vị trí hiện tại" name="viTriHienTai">
                     <input class="content__layout2p2Btn" type="submit" value="Thêm xe">
                 </form>
+                <script>
+                  // Bắt sự kiện submit của form
+                  document.getElementById("addCarForm").addEventListener("submit", function(event) {
+                  event.preventDefault(); // Ngăn chặn submit form mặc định
+
+                  // Gửi yêu cầu AJAX để thêm nhân viên
+                  var xhr = new XMLHttpRequest();
+                  xhr.open("POST", "/themxe", true);
+                  xhr.setRequestHeader("Content-Type", "application/json");
+
+                  // Lấy dữ liệu từ form
+                  var formData = {
+                    hangXe: document.getElementsByName("hangXe")[0].value,
+                    loaiXe: document.getElementsByName("loaiXe")[0].value,
+                    namSanXuat: document.getElementsByName("namSanXuat")[0].value,
+                    bienSo: document.getElementsByName("bienSo")[0].value,
+                    nguyenLieu: document.getElementsByName("nguyenLieu")[0].value,
+                    soKmDaDi: document.getElementsByName("soKmDaDi")[0].value,
+                    soChoNgoi: document.getElementsByName("soChoNgoi")[0].value,
+                    viTriHienTai: document.getElementsByName("viTriHienTai")[0].value
+                  };
+
+                  // Gửi dữ liệu nhân viên dưới dạng JSON
+                  xhr.send(JSON.stringify(formData));
+
+                  // Xử lý kết quả trả về
+                  xhr.onload = function() {
+                  if (xhr.status === 200) {
+                    var response = JSON.parse(xhr.responseText);
+                    if (response.success) {
+                    // Nếu thành công, hiển thị thông báo thành công
+                      alert(response.message);
+                    } else {
+                    // Nếu không thành công, hiển thị thông báo lỗi
+                      alert(response.message);
+                    }
+                  } 
+                  else {
+                    // Xử lý lỗi nếu không thể kết nối đến server
+                    alert("Có lỗi xảy ra khi gửi yêu cầu.");
+                  } 
+                };
+              });
+              </script>
               </div>
           </div>
         </div>

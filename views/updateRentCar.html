@@ -137,7 +137,6 @@
             <div class="content__layout1">
                 <div class="content__layout1p1">
                     <form class="content__layout1p1SearchForm" action="#" method="get">
-<<<<<<< HEAD
                       <input class="content__layout1p1SearchArea" name="rentalCode" id="rentalCodeInput" type="text" placeholder="Nhập mã thuê ( mã thuê có dạng MT0000000 )">
                       <input class="content__layout1p1BtnSubmit" type="button" value="Tìm kiếm" onclick="searchRentalByCode()">
                     </form>
@@ -247,22 +246,13 @@
                           });
                       }
                       </script>
-=======
-                        <input class="content__layout1p1SearchArea" type="text" placeholder="Nhập mã đặt xe">
-                        <input class="content__layout1p1BtnSubmit" type="submit" value="Tìm kiếm">
-                    </form>
-                </div>
-                <div class="content__layout1p2">
-                        
->>>>>>> 6e77e64d7f20ef44c6c9537ec712bb7d32ada847
                 </div>
                 <div class="content__layout1p3">
                     <div class="content__layout1p3Header">  
                         <p class="content__layout1p3HeaderP">Chỉnh sửa</p>
                     </div>
                     <div class="content__layout1p3Form">
-<<<<<<< HEAD
-                        <form class="content__layout1p3FormUpdate" action="/suathongtinthuexe" method="post">
+                        <form class="content__layout1p3FormUpdate"  onsubmit="event.preventDefault();" action="/suathongtinthuexe" method="post">
                             <input class="content__layout1p3Input" type="text" placeholder="Nhập mã khách hàng" name="maKH" id="newCustomerIDInput">
                             <input class="content__layout1p3Input" type="text" placeholder="Nhập mã xe" name="maXe" id="newCarIDInput">
                             <input class="content__layout1p3Input" type="text" placeholder="Nhập điểm nhận xe" name="diemNhanXe" id="newPickUpPlaceInput">
@@ -280,40 +270,35 @@
                             const diemTraXe = document.getElementById('newDropOffPlaceInput').value;
                             const ngayBatDau = document.getElementById('newStartDayInput').value;
                             const ngayKetThuc = document.getElementById('newEndDayInput').value;
-                            // Gửi yêu cầu xóa xe đến máy chủ
-                            $.ajax({
-                              url: '/suathongtinthuexe',
-                              type: 'POST',
-                              data: { 
-                                rentalCode: rentalCode, 
+                            // Gửi yêu cầu xóa nhân viên
+                          fetch('/suathongtinthuexe', {
+                              method: 'POST',
+                              headers: {
+                                'Content-Type': 'application/json'
+                              },
+                              body: JSON.stringify({ rentalCode: rentalCode, 
                                 maKH: maKH, 
                                 maXe: maXe, 
                                 diemNhanXe: diemNhanXe,
-                                diemTraXe:diemTraXe,
-                                ngayBatDau:ngayBatDau,
-                                ngayKetThuc:ngayKetThuc
-                              },
-                              success: function(response) {
-                                // Không hiển thị thông báo
-                              },
-                              error: function() {
-                                // Xảy ra lỗi trong quá trình gửi yêu cầu
-                                alert('Đã xảy ra lỗi');
-                              }
-                            });
+                                diemTraXe: diemTraXe,
+                                ngayBatDau: ngayBatDau,
+                                ngayKetThuc: ngayKetThuc })
+                            })
+                            .then(response => response.json())
+                            .then(result => {
+                            if (result.success) {
+                                alert(result.message);
+                            // Refresh lại danh sách nhân viên sau khi xóa
+                          } else {
+                              alert(result.message);
+                          }
+                          })
+                          // .catch(error => {
+                          //   console.log('Error removing employee:', error);
+                          //   alert('Có lỗi xảy ra khi sửa nhân viên.');
+                          // });
                           }
                         </script> 
-=======
-                        <form class="content__layout1p3FormUpdate" action="#" method="post">
-                            <input class="content__layout1p3Input" type="text" placeholder="Nhập mã khách hàng">
-                            <input class="content__layout1p3Input" type="text" placeholder="Nhập mã xe">
-                            <input class="content__layout1p3Input" type="text" placeholder="Nhập điểm nhận xe">
-                            <input class="content__layout1p3Input" type="text" placeholder="Nhập điểm trả xe">
-                            <input class="content__layout1p3Input" type="text" placeholder="Nhập ngày bắt đầu thuê xe">
-                            <input class="content__layout1p3Input" type="text" placeholder="Nhập ngày kết thúc thuê xe">                
-                            <input class="content__layout1p3Btn" type="submit" value="Xác nhận">
-                        </form>
->>>>>>> 6e77e64d7f20ef44c6c9537ec712bb7d32ada847
                     </div>
                 </div>
             </div>

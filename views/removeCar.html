@@ -122,42 +122,36 @@
                     </div>
                     <div class="submition_contentContent">Bạn có chắc chắn muốn xóa ?</div>
                     <div class="submition_contentFooter">
-                      <form class="content__layout1p1SearchForm" action="/xoaxe" method="post">
+                      <form class="content__layout1p1SearchForm" onsubmit="event.preventDefault();" action="/xoaxe" method="post">
                         <button class="content__layout1p1BtnSubmit31" type="submit" onclick="deleteCar()">Có</button>
-<<<<<<< HEAD
                         <button class="content__layout1p1BtnSubmit32" onclick="event.preventDefault();">Không</button>
-=======
-                        <button class="content__layout1p1BtnSubmit32">Không</button>
->>>>>>> 6e77e64d7f20ef44c6c9537ec712bb7d32ada847
                       </form>
                       <script>
                         function deleteCar() {
                           const carCode = document.getElementById('carCodeInput').value;
                           // Gửi yêu cầu xóa xe đến máy chủ
-                          $.ajax({
-                            url: '/xoaxe',
-                            type: 'POST',
-                            data: { carCode: carCode },
-                            success: function(response) {
-                              // Không hiển thị thông báo
-                            },
-                            error: function() {
-                              // Xảy ra lỗi trong quá trình gửi yêu cầu
-                              alert('Đã xảy ra lỗi');
-                            }
-                          });
-                        }
-<<<<<<< HEAD
-                        function cancelDelete() {
-            // Ngăn chặn sự kiện mặc định của form (chuyển hướng trang)
-            event.preventDefault();
-            // Đóng bảng submition
-            const submit = document.querySelector('.submition');
-            submit.classList.remove('open');
-          }
-=======
->>>>>>> 6e77e64d7f20ef44c6c9537ec712bb7d32ada847
-                      </script>                                         
+                          fetch('/xoaxe', {
+                        method: 'POST',
+                        headers: {
+                          'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ carCode: carCode })
+                      })
+                        .then(response => response.json())
+                        .then(result => {
+                          if (result.success) {
+                            alert(result.message);
+                            // Refresh lại danh sách nhân viên sau khi xóa
+                          } else {
+                            alert(result.message);
+                          }
+                        })
+                        .catch(error => {
+                          console.log('Error removing car:', error);
+                          alert('Có lỗi xảy ra khi xóa xe.');
+                        });
+                    }
+                  </script>                                         
                     </div>
                 </div> 
             </div>
@@ -199,10 +193,7 @@
                 <thead>
                   <tr>
                       <th>Hãng xe</th>
-<<<<<<< HEAD
                       <th>Mã xe</th>
-=======
->>>>>>> 6e77e64d7f20ef44c6c9537ec712bb7d32ada847
                       <th>Loại xe</th>
                       <th>Số chỗ ngồi</th>
                       <th>Năm sản xuất</th>
@@ -282,10 +273,7 @@
         // Thêm dữ liệu mới vào bảng
         const row = carTableBody.insertRow();
         row.insertCell().textContent = car.HangXe;
-<<<<<<< HEAD
         row.insertCell().textContent = car.MaXe;
-=======
->>>>>>> 6e77e64d7f20ef44c6c9537ec712bb7d32ada847
         row.insertCell().textContent = car.LoaiXe;
         row.insertCell().textContent = car.SoChoNgoi;
         row.insertCell().textContent = car.NamSanXuat;

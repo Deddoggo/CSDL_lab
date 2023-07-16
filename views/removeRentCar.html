@@ -122,7 +122,7 @@
                     </div>
                     <div class="submition_contentContent">Bạn có chắc chắn muốn xóa ?</div>
                     <div class="submition_contentFooter">
-                      <form class="content__layout1p1SearchForm" action="/xoathongtinthuexe" method="post">
+                      <form class="content__layout1p1SearchForm" id="removeRentalForm" onsubmit="event.preventDefault();" action="/xoathongtinthuexe" method="post">
                         <button class="content__layout1p1BtnSubmit31" type="submit" onclick="deleteRental()">Có</button>
                         <button class="content__layout1p1BtnSubmit32" onclick="event.preventDefault();">Không</button>
                       </form>
@@ -130,27 +130,28 @@
                         function deleteRental() {
                           const rentalCode = document.getElementById('rentalCodeInput').value;
                           // Gửi yêu cầu xóa xe đến máy chủ
-                          $.ajax({
-                            url: '/xoathongtinthuexe',
-                            type: 'POST',
-                            data: { rentalCode: rentalCode },
-                            success: function(response) {
-                              // Không hiển thị thông báo
-                            },
-                            error: function() {
-                              // Xảy ra lỗi trong quá trình gửi yêu cầu
-                              alert('Đã xảy ra lỗi');
-                            }
-                          });
-                        }
-                        function cancelDelete() {
-            // Ngăn chặn sự kiện mặc định của form (chuyển hướng trang)
-            event.preventDefault();
-            // Đóng bảng submition
-            const submit = document.querySelector('.submition');
-            submit.classList.remove('open');
-          }
-                      </script>
+                          fetch('/xoathongtinthuexe', {
+                        method: 'POST',
+                        headers: {
+                          'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ rentalCode: rentalCode })
+                      })
+                        .then(response => response.json())
+                        .then(result => {
+                          if (result.success) {
+                            alert(result.message);
+                            // Refresh lại danh sách nhân viên sau khi xóa
+                          } else {
+                            alert(result.message);
+                          }
+                        })
+                        .catch(error => {
+                          console.log('Error removing employee:', error);
+                          alert('Có lỗi xảy ra khi xóa nhân viên.');
+                        });
+                    }
+                  </script>
                     </div>
                 </div> 
             </div>

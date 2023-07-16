@@ -27,7 +27,6 @@
       <li class="header__listItem"><a class="header__link" href="signin.html">Hỗ Trợ</a></li>
     </ul>
   </div>
-<<<<<<< HEAD
 
   <div class="mainContent">
     <div class="content__signIn">
@@ -45,25 +44,6 @@
             <input class="Content__formBtn" type="submit" value="Đăng Nhập">
           </div>
         </form>
-=======
-    <div class="mainContent">
-      <div class="content__signIn">
-        <div class="content__logo">
-            <img class="content__logoImg" src="./assets/img/logo.png" alt="logo công ty">
-        </div>
-        <div class="content__login">
-            <form action="" class="content__form">
-              <div class="content__formHeader">
-                <p class="content__formHeaderP">Đăng Nhập</h1>
-              </div>
-              <div class="content__formInput">
-                <input class="Content__formInputArea" type="text" placeholder="Tên đăng nhập">
-                <input class="Content__formInputArea" type="password" placeholder="Mật khẩu">
-                <input class="Content__formBtn" type="submit" value="Đăng Nhập">
-              </div>
-            </form>
-        </div>
->>>>>>> 6e77e64d7f20ef44c6c9537ec712bb7d32ada847
       </div>
     </div>
   </div>
@@ -101,40 +81,42 @@
       <div class="footer__slogan">Best Service, Right Time, Right People</div>
     </footer>
   </div>
-
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script>
-    // Xử lý sự kiện đăng nhập
-    $(document).ready(function() {
-      $('#loginForm').submit(function(event) {
-        event.preventDefault();
-        const username = $('#usernameInput').val();
-        const password = $('#passwordInput').val();
-  
-        // Gửi yêu cầu đăng nhập đến máy chủ
-        $.ajax({
-          url: '/login',
-          type: 'POST',
-          data: { username: username, password: password },
-          success: function(response) {
-            // Kiểm tra kết quả đăng nhập từ máy chủ
-            if (response.success) {
-              // Đăng nhập thành công
-              window.location.href = 'index.html';
-            } else {
-              // Đăng nhập không thành công
-              alert('Đăng nhập không thành công. Vui lòng kiểm tra lại thông tin đăng nhập.');
-            }
-          },
-          error: function() {
-            // Xảy ra lỗi trong quá trình gửi yêu cầu
-            alert('Đã xảy ra lỗi.');
+<script>
+  $(document).ready(function() {
+    // Bắt sự kiện submit form
+    $('#loginForm').submit(function(event) {
+      event.preventDefault(); // Ngăn chặn sự kiện mặc định của form
+      const username = $('#usernameInput').val();
+      const password = $('#passwordInput').val();
+      // Gửi yêu cầu đăng nhập đến máy chủ
+      $.ajax({
+        url: '/login',
+        type: 'POST',
+        data: {
+          username: username,
+          password: password
+        },
+        success: function(response) {
+          // Xử lý phản hồi từ máy chủ sau khi đăng nhập thành công
+          // Ví dụ: Chuyển hướng đến trang chính
+          if (response.success) {
+            window.location.href = 'home.html';
+          } else {
+            alert(response.message);
           }
-        });
+        },
+        error: function() {
+          // Xử lý khi xảy ra lỗi trong quá trình đăng nhập
+          alert('Đăng nhập không thành công. Vui lòng kiểm tra lại thông tin đăng nhập.');
+        }
       });
     });
-  </script>
+  });
+</script>
+
   
+
 </body>
 
 </html>

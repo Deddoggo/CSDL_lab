@@ -104,7 +104,7 @@
                 <p class="content__layout2p1Heading">Thêm thông tin đặt xe</p>
               </div>
               <div class="content__layout2p2">
-                <form class="content__layout2p2Form" action="/themthongtindatxe" method="post">
+                <form class="content__layout2p2Form" id="addCarForm" onsubmit="event.preventDefault();" action="/themthongtindatxe" method="post">
                     <input class="content__layout2p2Input" type="text" placeholder="Nhập mã khách hàng" name="maKH">
                     <input class="content__layout2p2Input" type="text" placeholder="Nhập mã xe" name="maXe">
                     <input class="content__layout2p2Input" type="text" placeholder="Nhập điểm nhận xe" name="diemNhanXe">
@@ -113,6 +113,48 @@
                     <input class="content__layout2p2Input" type="text" placeholder="Nhập ngày kết thúc thuê xe (DD/MM/YYYY)" name="ngayKetThuc">
                     <input class="content__layout2p2Btn" type="submit" value="Đặt xe">
                 </form>
+                <script>
+                  // Bắt sự kiện submit của form
+                  document.getElementById("addCarForm").addEventListener("submit", function(event) {
+                  event.preventDefault(); // Ngăn chặn submit form mặc định
+
+                  // Gửi yêu cầu AJAX để thêm nhân viên
+                  var xhr = new XMLHttpRequest();
+                  xhr.open("POST", "/themthongtindatxe", true);
+                  xhr.setRequestHeader("Content-Type", "application/json");
+
+                  // Lấy dữ liệu từ form
+                  var formData = {
+                    maKH: document.getElementsByName("maKH")[0].value,
+                    maXe: document.getElementsByName("maXe")[0].value,
+                    diemNhanXe: document.getElementsByName("diemNhanXe")[0].value,
+                    diemTraXe: document.getElementsByName("diemTraXe")[0].value,
+                    ngayBatDau: document.getElementsByName("ngayBatDau")[0].value,
+                    ngayKetThuc: document.getElementsByName("ngayKetThuc")[0].value
+                  };
+
+                  // Gửi dữ liệu nhân viên dưới dạng JSON
+                  xhr.send(JSON.stringify(formData));
+
+                  // Xử lý kết quả trả về
+                  xhr.onload = function() {
+                  if (xhr.status === 200) {
+                    var response = JSON.parse(xhr.responseText);
+                    if (response.success) {
+                    // Nếu thành công, hiển thị thông báo thành công
+                      alert(response.message);
+                    } else {
+                    // Nếu không thành công, hiển thị thông báo lỗi
+                      alert(response.message);
+                    }
+                  } 
+                  else {
+                    // Xử lý lỗi nếu không thể kết nối đến server
+                    alert("Có lỗi xảy ra khi gửi yêu cầu.");
+                  } 
+                };
+              });
+              </script>
               </div>
           </div>
         </div>

@@ -137,7 +137,7 @@
         <div class="content__main">
             <div class="content__layout1">
                 <div class="content__layout1p1">
-                  <form class="content__layout1p1SearchForm" action="#" method="get">
+                  <form class="content__layout1p1SearchForm" action="#" method="get" onsubmit="event.preventDefault();">
                     <input class="content__layout1p1SearchArea" name="carCode" id="carCodeInput" type="text" placeholder="Nhập mã xe ( mã xe có dạng MX00000 )">
                       <input class="content__layout1p1BtnSubmit" type="button" value="Tìm kiếm" onclick="searchCarsByCode()">
                   </form>
@@ -149,10 +149,7 @@
                 <thead>
                   <tr>
                       <th>Hãng xe</th>
-<<<<<<< HEAD
                       <th>Mã xe</th>
-=======
->>>>>>> 6e77e64d7f20ef44c6c9537ec712bb7d32ada847
                       <th>Loại xe</th>
                       <th>Số chỗ ngồi</th>
                       <th>Năm sản xuất</th>
@@ -232,10 +229,7 @@
         // Thêm dữ liệu mới vào bảng
         const row = carTableBody.insertRow();
         row.insertCell().textContent = car.HangXe;
-<<<<<<< HEAD
         row.insertCell().textContent = car.MaXe;
-=======
->>>>>>> 6e77e64d7f20ef44c6c9537ec712bb7d32ada847
         row.insertCell().textContent = car.LoaiXe;
         row.insertCell().textContent = car.SoChoNgoi;
         row.insertCell().textContent = car.NamSanXuat;
@@ -258,7 +252,7 @@
                         <p class="content__layout1p3HeaderP">Chỉnh sửa</p>
                     </div>
                     <div class="content__layout1p3Form">
-                        <form class="content__layout1p3FormUpdate" action="/suaxe" method="post">
+                        <form class="content__layout1p3FormUpdate"  onsubmit="event.preventDefault();" action="/suaxe" method="post">
                             <input class="content__layout1p3Input" type="text" placeholder="Nhập biển số xe" name="bienSo" id="newLicensePlateInput">
                             <input class="content__layout1p3Input" type="text" placeholder="Nhập tình trạng sẵn có" name="tinhTrang" id="newStatusInput">
                             <input class="content__layout1p3Input" type="text" placeholder="Nhập vị trí hiện tại" name="viTriHienTai" id="newLocationInput">                      
@@ -271,24 +265,30 @@
                             const tinhTrang = document.getElementById('newStatusInput').value;
                             const viTriHienTai = document.getElementById('newLocationInput').value;
                             // Gửi yêu cầu xóa xe đến máy chủ
-                            $.ajax({
-                              url: '/suaxe',
-                              type: 'POST',
-                              data: { 
-                                carCode: carCode, 
+                            fetch('/suaxe', {
+                              method: 'POST',
+                              headers: {
+                                'Content-Type': 'application/json'
+                              },
+                              body: JSON.stringify({ carCode: carCode, 
                                 bienSo: bienSo, 
                                 tinhTrang: tinhTrang, 
-                                viTriHienTai: viTriHienTai
-                              },
-                              success: function(response) {
-                                // Không hiển thị thông báo
-                              },
-                              error: function() {
-                                // Xảy ra lỗi trong quá trình gửi yêu cầu
-                                alert('Đã xảy ra lỗi');
-                              }
-                            });
+                                viTriHienTai: viTriHienTai})
+                            })
+                            .then(response => response.json())
+                            .then(result => {
+                            if (result.success) {
+                                alert(result.message);
+                            // Refresh lại danh sách nhân viên sau khi xóa
+                          } else {
+                              alert(result.message);
                           }
+                          })
+                          // .catch(error => {
+                          //   console.log('Error removing employee:', error);
+                          //   alert('Có lỗi xảy ra khi sửa nhân viên.');
+                          // });
+                        }
                         </script> 
                     </div>
                 </div>

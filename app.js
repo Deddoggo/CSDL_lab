@@ -14,33 +14,116 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 // Cấu hình đường dẫn cho các tệp HTML
 const htmlDir = path.join(__dirname, 'views');
-// Thiết lập Db
-var config = {
+// Thiet lap Db de dang nhap
+const configForLogIn = {
   server: 'DESKTOP-2MP8OGB',
   database: 'RentalCar',
-  port:1433 ,
+  port: 1433,
   authentication: {
-      type: 'default',
-      options: {
-          userName: 'sa',
-          password: '2308'
-      }
+    type: 'default',
+    options: {
+      userName: 'sa',
+      password: '2308'
+    }
   },
   options: {
-      encrypt: false,
-      enableArithAbort: true
+    encrypt: false,
+    enableArithAbort: true
   }
 };
 
-// Kết nối với Db
-sql.connect(config, function(err) {
+// Kết nối với Db để lấy thông tin bảng Users
+sql.connect(configForLogIn, function(err) {
   if (err) {
-      console.log("Failed to connect to database: " + err);
+    console.log("Failed to connect to database: " + err);
   } else {
-      console.log("Connected to database");
-
+    console.log("Connected to database to get Users table info");
   }
 });
+app.post('/logout', function(req, res) {
+  // Ngắt kết nối config
+  sql.close(function(err) {
+    if (err) {
+      console.log("Failed to close database connection: " + err);
+    } else {
+      console.log("Closed database connection");
+    }
+  });
+
+  // Kết nối lại với configForLogIn
+  sql.connect(configForLogIn, function(err) {
+    if (err) {
+      console.log("Failed to connect to database: " + err);
+    } else {
+      console.log("Connected to database to get Users table info");
+    }
+  });
+
+  // Chuyển hướng người dùng về trang đăng nhập
+  res.redirect('/signin.html');
+});
+
+app.post('/login', function(req, res) {
+  const username = req.body.username;
+  const password = req.body.password;
+
+  // Tạo truy vấn SQL để kiểm tra thông tin đăng nhập
+  const query = `SELECT * FROM Users WHERE username LIKE '%${username}%' AND password LIKE '%${password}%'`;
+
+  // Thực hiện truy vấn SQL
+  const request = new sql.Request();
+  request.query(query, function(err, result) {
+    if (err) {
+      console.log("Error executing SQL query: " + err);
+      res.json({ success: false, message: "Error executing SQL query" });
+    } else {
+      // Kiểm tra kết quả truy vấn
+      if (result.recordset.length > 0) {
+        // Đóng kết nối configForLogIn sau khi đăng nhập thành công
+        sql.close(function(err) {
+          if (err) {
+            console.log("Failed to close database connection: " + err);
+          } else {
+            console.log("Closed database connection");
+          }
+        });
+
+        // Thiết lập Db để thực hiện các chức năng khác
+        const config = {
+          server: 'DESKTOP-2MP8OGB',
+          database: 'RentalCar',
+          port: 1433,
+          authentication: {
+            type: 'default',
+            options: {
+              userName: username,
+              password: password
+            }
+          },
+          options: {
+            encrypt: false,
+            enableArithAbort: true
+          }
+        };
+
+        // Kết nối với Db để thực hiện các chức năng khác
+        sql.connect(config, function(err) {
+          if (err) {
+            console.log("Failed to connect to database: " + err);
+          } else {
+            console.log("Connected to database for other functions");
+          }
+        });
+
+        res.json({ success: true, message: "Login successful" });
+      } else {
+        res.json({ success: false, message: "Invalid username or password" });
+      }
+    }
+  });
+});
+// Reset lai cac ket noi khi dang xuat
+
 module.exports = connect ;
 // Định vị thư mục chứa các tệp tĩnh
 app.use('/assets', express.static(path.join(__dirname, 'views', 'assets')));
@@ -124,18 +207,16 @@ app.post('/themxe', (req, res) => {
   const soChoNgoi = req.body.soChoNgoi;
   const viTriHienTai = req.body.viTriHienTai;
   // Thực hiện truy vấn SQL để thêm thông tin xe vào cơ sở dữ liệu
-<<<<<<< HEAD
   const query = `INSERT INTO Xe (TinhTrang ,HangXe, LoaiXe, NamSanXuat, BienSo, NguyenLieu, SoKmDaDi, SoChoNgoi, ViTriHienTai) VALUES (N'Chưa thuê',N'${hangXe}', N'${loaiXe}', N'${namSanXuat}', N'${bienSo}', N'${nguyenLieu}', N'${soKmDaDi}', N'${soChoNgoi}', N'${viTriHienTai}')`;
-=======
-  const query = `INSERT INTO Xe (TinhTrang ,HangXe, LoaiXe, NamSanXuat, BienSo, NguyenLieu, SoKmDaDi, SoChoNgoi, ViTriHienTai) VALUES (N'Chưa thuê','${hangXe}', '${loaiXe}', '${namSanXuat}', '${bienSo}', '${nguyenLieu}', '${soKmDaDi}', '${soChoNgoi}', '${viTriHienTai}')`;
->>>>>>> 6e77e64d7f20ef44c6c9537ec712bb7d32ada847
   sql.query(query)
     .then(() => {
       // Trả về mã trạng thái 200 để chỉ rằng thêm xe thành công
-      res.send('Thêm thành công');
+      res.json({ success: true, message: 'Thêm thành công' });
     })
     .catch(error => {
-      res.send('Thêm thất bại');
+      console.log('Error adding car:', error);
+      // Trả về kết quả lỗi dưới dạng JSON
+      res.status(500).json({ success: false, message: 'Có lỗi xảy ra khi thêm xe' });
     });
 });
 // xoa xe khoi bang
@@ -165,11 +246,13 @@ app.post('/themxe', (req, res) => {
     const query = `DELETE FROM Xe WHERE MaXe='${carCode}'`;
     sql.query(query)
     .then(() => {
-      // Trả về mã trạng thái 200 để chỉ rằng xóa xe thành công
-      res.send('Xóa thành công');
+      // Trả về mã trạng thái 200 để chỉ rằng thêm xe thành công
+      res.json({ success: true, message: 'Xóa thành công' });
     })
     .catch(error => {
-      res.send('Xóa thất bại');
+      console.log('Error deleting car:', error);
+      // Trả về kết quả lỗi dưới dạng JSON
+      res.status(500).json({ success: false, message: 'Có lỗi xảy ra khi xóa xe' });
     });
   });
 //Thay doi thong tin cua xe
@@ -201,21 +284,18 @@ app.post('/suaxe', (req, res) => {
   const viTriHienTai = req.body.viTriHienTai;
   
   // Thực hiện truy vấn SQL để sửa thông tin xe trong cơ sở dữ liệu
-<<<<<<< HEAD
   const query = `UPDATE Xe SET BienSo=N'${bienSo}', TinhTrang=N'${tinhTrang}', ViTriHienTai=N'${viTriHienTai}' WHERE MaXe=N'${carCode}'`;
-=======
-  const query = `UPDATE Xe SET BienSo='${bienSo}', TinhTrang='${tinhTrang}', ViTriHienTai='${viTriHienTai}' WHERE MaXe='${carCode}'`;
->>>>>>> 6e77e64d7f20ef44c6c9537ec712bb7d32ada847
   sql.query(query)
     .then(() => {
       // Trả về mã trạng thái 200 để chỉ rằng sửa xe thành công
-      res.send('Sửa thành công');
+      res.json({ success: true, message: 'sửa thành công' });
     })
     .catch(error => {
-      res.send('Sửa thất bại');
+      console.log('Error adding car:', error);
+      // Trả về kết quả lỗi dưới dạng JSON
+      res.status(500).json({ success: false, message: 'Có lỗi xảy ra khi sửa xe' });
     });
 });
-<<<<<<< HEAD
 // Quan ly thue xe
 // Tim kiem hoa don
 app.get('/timhoadon', (req, res) => {
@@ -287,14 +367,15 @@ app.post('/themthongtindatxe', (req, res) => {
   const query = `INSERT INTO QuanLyThueXe (MaKhachHang, MaXe, DiaDiemNhanXe, DiaDiemTraXe, NgayBatDau, NgayKetThuc) 
                  VALUES (N'${maKH}', N'${maXe}', N'${diemNhanXe}', N'${diemTraXe}', '${ngayBatDau}', '${ngayKetThuc}')`;
   sql.query(query)
-    .then(() => {
-      // Trả về mã trạng thái 200 để chỉ rằng thêm thông tin đặt xe thành công
-      res.send('Đặt xe thành công');
-    })
-    .catch(error => {
-      res.send('Đặt xe thất bại');
-      console.log(error);
-    });
+  .then(() => {
+    // Trả về mã trạng thái 200 để chỉ rằng thêm xe thành công
+    res.json({ success: true, message: 'Thêm thông tin thuê thành công' });
+  })
+  .catch(error => {
+    console.log('Error adding rental:', error);
+    // Trả về kết quả lỗi dưới dạng JSON
+    res.status(500).json({ success: false, message: 'Có lỗi xảy ra khi thêm thông tin thuê xe' });
+  });
 });
 //Tim thong tin thue xe de xoa
 app.get('/timmathue', (req, res) => {
@@ -333,11 +414,13 @@ app.post('/xoathongtinthuexe', (req, res) => {
   const query = `DELETE FROM QuanLyThueXe WHERE MaThue='${rentalCode}'`;
   sql.query(query)
   .then(() => {
-    // Trả về mã trạng thái 200 để chỉ rằng xóa xe thành công
-    res.send('Xóa thành công');
+    // Trả về mã trạng thái 200 để chỉ rằng thêm xe thành công
+    res.json({ success: true, message: 'Xóa thông tin thuê thành công' });
   })
   .catch(error => {
-    res.send('Xóa thất bại');
+    console.log('Error deleting rental:', error);
+    // Trả về kết quả lỗi dưới dạng JSON
+    res.status(500).json({ success: false, message: 'Có lỗi xảy ra khi xóa thông tin thuê xe' });
   });
 });
 //Tim thong tin thue xe de sua
@@ -394,39 +477,17 @@ app.post('/suathongtinthuexe', (req, res) => {
   const query = `UPDATE QuanLyThueXe SET MaKhachHang=N'${maKH}', MaXe=N'${maXe}', DiaDiemNhanXe=N'${diemNhanXe}',DiaDiemTraXe=N'${diemTraXe}',NgayBatDau=N'${ngayBatDau}',NgayKetThuc=N'${ngayKetThuc}' 
   WHERE MaThue=N'${rentalCode}'`;
   sql.query(query)
-    .then(() => {
-      // Trả về mã trạng thái 200 để chỉ rằng sửa xe thành công
-      res.send('Sửa thành công');
-    })
-    .catch(error => {
-      res.send('Sửa thất bại');
-    });
+  .then(() => {
+    // Trả về mã trạng thái 200 để chỉ rằng thêm xe thành công
+    res.json({ success: true, message: 'Sửa thông tin thuê thành công' });
+  })
+  .catch(error => {
+    console.log('Error updating rental:', error);
+    // Trả về kết quả lỗi dưới dạng JSON
+    res.status(500).json({ success: false, message: 'Có lỗi xảy ra khi sửa thông tin thuê xe' });
+  });
 });
-app.post('/login', async (req, res) => {
-  const username = req.body.username;
-  const password = req.body.password;
 
-  try {
-    const pool = await sql.connect(config);
-
-    const query = `SELECT * FROM Users WHERE Username = @username AND Password = @password`;
-    const result = await pool.request()
-      .input('username', sql.NVarChar, username)
-      .input('password', sql.NVarChar, password)
-      .query(query);
-
-    if (result.recordset.length > 0) {
-      res.send({ success: true });
-    } else {
-      res.send({ success: false });
-    }
-  } catch (error) {
-    console.error('Error checking login:', error);
-    res.send({ success: false });
-  }
-});
-=======
->>>>>>> 6e77e64d7f20ef44c6c9537ec712bb7d32ada847
 // Khởi động máy chủ
 app.listen(3000, () => {
   console.log('Server is running on port 3000');

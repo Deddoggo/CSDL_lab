@@ -76,8 +76,28 @@
               </li>
             </ul>
             <ul class="header__navright">
-              <li class="header__listItem"><a class="header__link" href="signin.html">Đăng Xuất</a></li>
+              <form class="header__listItem" class="header__link" action="/logout" method="post">                      
+                <input id="logoutbtn" class="header__listItem" class="header__link"type="submit" onclick="logout()" value="Đăng Xuất">
+            </form>
               <li class="header__listItem"><a class="header__link" href="help.html">Hỗ Trợ</a></li>
+              <script>
+  function logout() {
+  $.ajax({
+    type: 'POST',
+    url: '/logout',
+    success: function(response) {
+      // Xử lý phản hồi từ máy chủ sau khi đăng xuất thành công
+      // Ví dụ: Chuyển hướng đến trang đăng nhập
+      window.location.href = 'signin.html';
+    },
+    error: function() {
+      // Xử lý khi xảy ra lỗi trong quá trình đăng xuất
+      alert('Đăng xuất không thành công. Vui lòng thử lại.');
+    }
+  });
+}
+
+              </script>
             </ul>
     </div>
 
