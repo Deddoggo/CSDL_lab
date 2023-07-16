@@ -124,7 +124,11 @@ app.post('/themxe', (req, res) => {
   const soChoNgoi = req.body.soChoNgoi;
   const viTriHienTai = req.body.viTriHienTai;
   // Thực hiện truy vấn SQL để thêm thông tin xe vào cơ sở dữ liệu
+<<<<<<< HEAD
   const query = `INSERT INTO Xe (TinhTrang ,HangXe, LoaiXe, NamSanXuat, BienSo, NguyenLieu, SoKmDaDi, SoChoNgoi, ViTriHienTai) VALUES (N'Chưa thuê',N'${hangXe}', N'${loaiXe}', N'${namSanXuat}', N'${bienSo}', N'${nguyenLieu}', N'${soKmDaDi}', N'${soChoNgoi}', N'${viTriHienTai}')`;
+=======
+  const query = `INSERT INTO Xe (TinhTrang ,HangXe, LoaiXe, NamSanXuat, BienSo, NguyenLieu, SoKmDaDi, SoChoNgoi, ViTriHienTai) VALUES (N'Chưa thuê','${hangXe}', '${loaiXe}', '${namSanXuat}', '${bienSo}', '${nguyenLieu}', '${soKmDaDi}', '${soChoNgoi}', '${viTriHienTai}')`;
+>>>>>>> 6e77e64d7f20ef44c6c9537ec712bb7d32ada847
   sql.query(query)
     .then(() => {
       // Trả về mã trạng thái 200 để chỉ rằng thêm xe thành công
@@ -197,7 +201,11 @@ app.post('/suaxe', (req, res) => {
   const viTriHienTai = req.body.viTriHienTai;
   
   // Thực hiện truy vấn SQL để sửa thông tin xe trong cơ sở dữ liệu
+<<<<<<< HEAD
   const query = `UPDATE Xe SET BienSo=N'${bienSo}', TinhTrang=N'${tinhTrang}', ViTriHienTai=N'${viTriHienTai}' WHERE MaXe=N'${carCode}'`;
+=======
+  const query = `UPDATE Xe SET BienSo='${bienSo}', TinhTrang='${tinhTrang}', ViTriHienTai='${viTriHienTai}' WHERE MaXe='${carCode}'`;
+>>>>>>> 6e77e64d7f20ef44c6c9537ec712bb7d32ada847
   sql.query(query)
     .then(() => {
       // Trả về mã trạng thái 200 để chỉ rằng sửa xe thành công
@@ -207,6 +215,7 @@ app.post('/suaxe', (req, res) => {
       res.send('Sửa thất bại');
     });
 });
+<<<<<<< HEAD
 // Quan ly thue xe
 // Tim kiem hoa don
 app.get('/timhoadon', (req, res) => {
@@ -416,6 +425,8 @@ app.post('/login', async (req, res) => {
     res.send({ success: false });
   }
 });
+=======
+>>>>>>> 6e77e64d7f20ef44c6c9537ec712bb7d32ada847
 // Khởi động máy chủ
 app.listen(3000, () => {
   console.log('Server is running on port 3000');

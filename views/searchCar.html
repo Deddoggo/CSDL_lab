@@ -147,7 +147,10 @@
                 <thead>
                   <tr>
                       <th>Hãng xe</th>
+<<<<<<< HEAD
                       <th>Mã xe</th>
+=======
+>>>>>>> 6e77e64d7f20ef44c6c9537ec712bb7d32ada847
                       <th>Loại xe</th>
                       <th>Số chỗ ngồi</th>
                       <th>Năm sản xuất</th>
@@ -222,12 +225,19 @@
       // Có xe khớp, ẩn thông báo và hiển thị bảng
       noMatchMessage.style.display = 'none';
       carTable.style.display = 'table';
+<<<<<<< HEAD
       blankmessage.style.display = 'none';
+=======
+
+>>>>>>> 6e77e64d7f20ef44c6c9537ec712bb7d32ada847
       cars.forEach(car => {
         // Thêm dữ liệu mới vào bảng
         const row = carTableBody.insertRow();
         row.insertCell().textContent = car.HangXe;
+<<<<<<< HEAD
         row.insertCell().textContent = car.MaXe;
+=======
+>>>>>>> 6e77e64d7f20ef44c6c9537ec712bb7d32ada847
         row.insertCell().textContent = car.LoaiXe;
         row.insertCell().textContent = car.SoChoNgoi;
         row.insertCell().textContent = car.NamSanXuat;

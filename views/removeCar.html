@@ -124,7 +124,11 @@
                     <div class="submition_contentFooter">
                       <form class="content__layout1p1SearchForm" action="/xoaxe" method="post">
                         <button class="content__layout1p1BtnSubmit31" type="submit" onclick="deleteCar()">Có</button>
+<<<<<<< HEAD
                         <button class="content__layout1p1BtnSubmit32" onclick="event.preventDefault();">Không</button>
+=======
+                        <button class="content__layout1p1BtnSubmit32">Không</button>
+>>>>>>> 6e77e64d7f20ef44c6c9537ec712bb7d32ada847
                       </form>
                       <script>
                         function deleteCar() {
@@ -143,6 +147,7 @@
                             }
                           });
                         }
+<<<<<<< HEAD
                         function cancelDelete() {
             // Ngăn chặn sự kiện mặc định của form (chuyển hướng trang)
             event.preventDefault();
@@ -150,6 +155,8 @@
             const submit = document.querySelector('.submition');
             submit.classList.remove('open');
           }
+=======
+>>>>>>> 6e77e64d7f20ef44c6c9537ec712bb7d32ada847
                       </script>                                         
                     </div>
                 </div> 
@@ -192,7 +199,10 @@
                 <thead>
                   <tr>
                       <th>Hãng xe</th>
+<<<<<<< HEAD
                       <th>Mã xe</th>
+=======
+>>>>>>> 6e77e64d7f20ef44c6c9537ec712bb7d32ada847
                       <th>Loại xe</th>
                       <th>Số chỗ ngồi</th>
                       <th>Năm sản xuất</th>
@@ -272,7 +282,10 @@
         // Thêm dữ liệu mới vào bảng
         const row = carTableBody.insertRow();
         row.insertCell().textContent = car.HangXe;
+<<<<<<< HEAD
         row.insertCell().textContent = car.MaXe;
+=======
+>>>>>>> 6e77e64d7f20ef44c6c9537ec712bb7d32ada847
         row.insertCell().textContent = car.LoaiXe;
         row.insertCell().textContent = car.SoChoNgoi;
         row.insertCell().textContent = car.NamSanXuat;
