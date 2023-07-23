@@ -26,32 +26,38 @@
     height: 46px
 }
 
-#content .content2
+.content2
 {
     display: flex;
-    list-style-type: none;
-    padding-left: 16%;
-
+    width: 100%;
+    padding: 20px;
+    justify-content: space-evenly;
 }
 
 
-#content .content2 .cot-trai, #content .content2 .cot-phai
+.cot-trai,.cot-phai
 {
     width:40%;
     background-color: #003b46;
     font-size: 30px;
+    line-height: 200px;
     height: 200px;
     border-radius: 15px;
     display: flex;
     align-items: center;
+
 }
 
 
-#content .content2 a{
+.content2 a{
     color: white;
     font-weight:400;
     text-decoration: none;
     margin: auto;
+    justify-content: center;
+    line-height: 200px;
+    flex: 1;
+    text-align: center;
 }
 
 #content .content2 .cot-phai {
@@ -70,7 +76,7 @@
 
 #content .content3
 {
-    width: 70%;
+    width: 85%;
     height: 200px;
     margin: auto;
     background-color: white;
@@ -80,20 +86,15 @@
     border-radius: 15px;
     display: flex;
     align-items: center;
+    padding: 20px;
 }
 
 #content .content3:hover
 {
-    width: 70%;
+    width: 85%;
     height: 200px;
-    margin: auto;
     background-color: rgb(221, 220, 220);
     margin-top: 20px;
-    list-style-type: none;
-    font-size: 30px;
-    border-radius: 15px;
-    display: flex;
-    align-items: center;
 }
 
 #content .content3 a
@@ -102,5 +103,8 @@
     color: #003b46;
     font-weight: 700;
     text-decoration: none;
-    margin: auto;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    flex: 1;
 }

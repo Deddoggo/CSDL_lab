@@ -9,10 +9,10 @@
     <link rel="stylesheet" href="./assets/css/base.css">
     <link rel="stylesheet" href="./assets/css/main.css">
     <link rel="stylesheet" href="./assets/css/home.css">
-    <link rel="stylesheet" href="./assets/css/404.css">
+    <link rel="stylesheet" href="./assets/css/layout2.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap&subset=vietnamese" rel="stylesheet">
-    <title>404</title>
+    <title>Add Account</title>
 </head>
 <body>
   <div class="header">
@@ -94,13 +94,83 @@
       <li class="header__listItem"><a class="header__link" href="help.html">Hỗ Trợ</a></li>
     </ul>
   </div>
-
+  
       <div class="content">
-        
-      </div>
+        <div class="content__sidebar">
+            <p class="content__sidebarHeading">Chức năng</p>
+            <ul class="content__sidebarList">
+              <li class="content__sidebarItem"><a class="content__sidebarFunction" href="manageAccount.html">Quản lý tài khoản</a></li>
+              <li class="content__sidebarItem">
+                <ul class="content__sidebarSubList">
+                <li class="content__sidebarSubItem"><a class="content__sidebarLink" href="listAccount.html">Danh sách tài khoản</a></li>
+                <li class="content__sidebarSubItem"><a class="content__sidebarLink" href="addAccount.html">Thêm tài khoản</a></li>
+                <li class="content__sidebarSubItem"><a class="content__sidebarLink" href="updateAccount.html">Sửa tài khoản</a></li>
+                <li class="content__sidebarSubItem"><a class="content__sidebarLink" href="removeAccount.html">Xóa tài khoản</a></li>
+                <li class="content__sidebarSubItem"><a class="content__sidebarLink" href="searchAccount.html">Tìm kiếm tài khoản</a></li>
+              </ul>
+              </li>
+            </ul>
+            <p id="ct__sbback"><a class="ct__sbbackLink" href="home.html"><i class="ti-angle-left" style="font-size: 1.8rem;"></i>&nbspQuay lại</a></p>
+          </div> 
+        <div class="content__main">
+          <div class="content__layout2">
+              <div class="content__layout2p1">
+                <p class="content__layout2p1Heading">Thêm tài khoản</p>
+              </div>
+              <div class="content__layout2p2">
+                <form id="AddUForm" class="content__layout2p2Form" action="/addU" method="post">
+                    <input class="content__layout2p2Input" type="text" placeholder="Nhập mã nhân viên" name="MaNhanVien">
+                    <input class="content__layout2p2Input" type="text" placeholder="Nhập tên tài khoản" name="Username">
+                    <input class="content__layout2p2Input" type="text" placeholder="Nhập mật khẩu" name="Password">
+                    <input class="content__layout2p2Btn" type="submit" value="Xác nhận">
+                </form>
+                <script>
+                  // Bắt sự kiện submit của form
+                  document.getElementById("AddUForm").addEventListener("submit", function(event) {
+                  event.preventDefault(); // Ngăn chặn submit form mặc định
 
-      <div id="footer">
-        <div class="footer">
+                  // Gửi yêu cầu AJAX để thêm nhân viên
+                  var xhr = new XMLHttpRequest();
+                  xhr.open("POST", "/addU", true);
+                  xhr.setRequestHeader("Content-Type", "application/json");
+
+                  // Lấy dữ liệu từ form
+                  var formData = {
+                      MaNhanVien: document.getElementsByName("MaNhanVien")[0].value,
+                      Username: document.getElementsByName("Username")[0].value,
+                      Password: document.getElementsByName("Password")[0].value,
+                  };
+
+                  // Gửi dữ liệu nhân viên dưới dạng JSON
+                  xhr.send(JSON.stringify(formData));
+
+                  // Xử lý kết quả trả về
+                  xhr.onload = function() {
+                  if (xhr.status === 200) {
+                    var response = JSON.parse(xhr.responseText);
+                    if (response.success) {
+                    // Nếu thành công, hiển thị thông báo thành công
+                      alert(response.message);
+                    } else {
+                    // Nếu không thành công, hiển thị thông báo lỗi
+                      alert(response.message);
+                    }
+                  } 
+                  else {
+                    // Xử lý lỗi nếu không thể kết nối đến server
+                    alert("Có lỗi xảy ra khi gửi yêu cầu.");
+                  } 
+                };
+              });
+              </script>
+              </div>
+          </div>
+        </div>
+    </div>
+    
+  
+    <div id="footer">
+      <div class="footer">
             <footer class="footer">
                 <div class="footer__p1">
                   <p class="footer--h1">Công ty cho thuê xe Takehiro</p>
@@ -129,8 +199,8 @@
                   <img class="footer__p3logo" src="./assets/img/dmca-logo.png" alt="">
                 </div>
             </footer>
-        </div>
-        <div class="footer2">
+      </div>
+      <div class="footer2">
           <footer class="footer">
             <div class="footer__logo">
               <img class="footer__logoImg" src="./assets/img/logo.png" alt="logo công ty">
@@ -140,7 +210,7 @@
             </div>
             <div class="footer__slogan">Best Service, Right Time, Right People</div>
           </footer>
-        </div>
+      </div>
     </div>
-</body>
+  </body>
 </html>

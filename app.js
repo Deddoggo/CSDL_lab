@@ -2,7 +2,6 @@
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
-const addCarHandler = require('./themxe.js');
 const path = require('path');
 var sql = require('mssql');
 var consoleTable = require('console.table');
@@ -147,8 +146,10 @@ app.use((req, res, next) => {
 });
 
 // ... Định nghĩa các route khác
-//Truy van danh sach xe
-app.get('/danhsachxe', (req, res) => {
+// Hiển thị thông tin các  loại xe 
+// ... Định nghĩa các route khác
+// 1. Chức năng hiển thị thông tin về xe 
+app.get('/data', (req, res) => {
   // Thực hiện truy vấn SQL để lấy thông tin về các loại xe
   const query = 'SELECT * FROM Xe';
   sql.query(query)
@@ -162,10 +163,393 @@ app.get('/danhsachxe', (req, res) => {
     });
 });
 
-// Truy van cac xe can phai bao duong
-app.get('/baoduong', (req, res) => {
-  // Thực hiện truy vấn SQL để lấy thông tin về các loại xe
-  const query = ' SELECT Xe.* FROM Xe JOIN BaoDuongXe ON Xe.MaXe = BaoDuongXe.MaXe WHERE BaoDuongXe.NgayBaoDuongTiepTheo < GETDATE();';
+//1. -------- Hiển thị  thông tin danh sách các nhân viên
+app.get('/listE', (req, res) => {
+  const query = 'SELECT * FROM NhanVien';
+  sql.query(query)
+    .then((result) => {
+      // Gửi kết quả về cho máy khách
+      res.json(result.recordset);
+    })
+    .catch((error) => {
+      console.log('Error executing SQL query:', error);
+      res.status(500).send('Internal Server Error');
+    });
+});
+
+// 2. -------- Tìm kiếm nhân viên theo tên
+app.get('/searchEmployee', (req, res) => {
+  const NameEInput = req.query.NameEInput;
+
+  const query = `SELECT * FROM NhanVien WHERE HoTen LIKE N'%${NameEInput}%'`;
+
+  sql.query(query)
+    .then((result) => {
+      // Gửi kết quả về cho máy khách
+      res.json(result.recordset);
+    })
+    .catch((error) => {
+      console.log('Error executing SQL query:', error);
+      res.status(500).send('Internal Server Error');
+    });
+});
+
+// 3. -------- Them cong nhan
+app.post('/addE', (req, res) => {
+  // Lấy thông tin xe từ yêu cầu POST
+  const HoTen = req.body.HoTen;
+  const SoDienThoai = req.body.SoDienThoai;
+  const Email = req.body.Email;
+  const DiaChi = req.body.DiaChi;
+  const SoCCCD_CMND = req.body.SoCCCD_CMND;
+  const ChucVu = req.body.ChucVu;
+  const TienLuong = req.body.TienLuong;
+  // Thực hiện truy vấn SQL để thêm thông tin xe vào cơ sở dữ liệu
+  const query = `INSERT INTO NhanVien (HoTen, SoDienThoai, Email, DiaChi, SoCCCD_CMND, ChucVu, TienLuong) VALUES (N'${HoTen}','${SoDienThoai}', '${Email}', N'${DiaChi}', '${SoCCCD_CMND}', N'${ChucVu}', '${TienLuong}')`;
+  sql.query(query)
+    .then(() => {
+      // Trả về kết quả thành công dưới dạng JSON
+      res.json({ success: true, message: 'Thêm nhân viên thành công' });
+    })
+    .catch(error => {
+      console.log('Error adding employee:', error);
+      // Trả về kết quả lỗi dưới dạng JSON
+      res.status(500).json({ success: false, message: 'Có lỗi xảy ra khi thêm nhân viên' });
+    });
+});
+// 4. -------- Xóa thông tin nhân viên
+//tim nhan vien de xoa
+app.get('/searchEtoremove', (req, res) => {
+  const IdEInput = req.query.IdEInput;
+
+  const query = `SELECT * FROM NhanVien WHERE MaNhanVien LIKE '%${IdEInput}%'`;
+
+  sql.query(query)
+    .then((result) => {
+      // Gửi kết quả về cho máy khách
+      res.json(result.recordset);
+    })
+    .catch((error) => {
+      console.log('Error executing SQL query:', error);
+      res.status(500).send('Internal Server Error');
+    });
+});
+// Xoa thong tin nhan vien
+app.post('/removeE', (req, res) => {
+  const IdEInput = req.body.IdEInput;
+
+  const query = `EXEC sp_DeleteEmployee @MaNhanVien='${IdEInput}'`;
+  sql.query(query)
+    .then(() => {
+      // Trả về kết quả thành công dưới dạng JSON
+      res.json({ success: true, message: 'Xóa nhân viên thành công' });
+    })
+    .catch(error => {
+      console.log('Error removing employee:', error);
+      // Trả về kết quả lỗi dưới dạng JSON
+      res.status(500).json({ success: false, message: 'Có lỗi xảy ra khi xóa nhân viên' });
+    });
+});
+
+// 5. -------- Sửa thông tin nhân viên
+//Tim xe de sua
+app.get('/searchEtoupdate', (req, res) => {
+  // Lấy biển số xe từ yêu cầu của người dùng
+  const IdEInput = req.query.IdEInput;
+
+  // Thực hiện truy vấn SQL để lấy thông tin về các loại xe dựa trên biển số
+  const query = `SELECT * FROM NhanVien WHERE MaNhanVien LIKE '%${IdEInput}%'`;
+
+  sql.query(query)
+    .then((result) => {
+      // Gửi kết quả về cho máy khách
+      res.json(result.recordset);
+    })
+    .catch((error) => {
+      console.log('Error executing SQL query:', error);
+      res.status(500).send('Internal Server Error');
+    });
+});
+// Sua thong tin xe
+app.post('/updateE', (req, res) => {
+// Lấy thông tin xe từ yêu cầu POST
+const IdEInput = req.body.IdEInput;
+const HoTen = req.body.HoTen;
+const SoDienThoai = req.body.SoDienThoai;
+const Email = req.body.Email;
+const DiaChi = req.body.DiaChi;
+const SoCCCD_CMND = req.body.SoCCCD_CMND;
+const ChucVu = req.body.ChucVu;
+const TienLuong = req.body.TienLuong;
+
+// Thực hiện truy vấn SQL để sửa thông tin xe trong cơ sở dữ liệu
+const query = `UPDATE NhanVien SET HoTen=N'${HoTen}', SoDienThoai='${SoDienThoai}', Email='${Email}',DiaChi=N'${DiaChi}',SoCCCD_CMND='${SoCCCD_CMND}',ChucVu=N'${ChucVu}',TienLuong='${TienLuong}' WHERE MaNhanVien='${IdEInput}'`;
+sql.query(query)
+    .then(() => {
+      // Trả về kết quả thành công dưới dạng JSON
+      res.json({ success: true, message: 'Sửa thông tin nhân viên thành công' });
+    })
+    .catch(error => {
+      console.log('Error updating employee:', error);
+      // Trả về kết quả lỗi dưới dạng JSON
+      res.status(500).json({ success: false, message: 'Có lỗi xảy ra khi sửa nhân viên' });
+    });
+});
+
+// 6. -------- Hiển thị  thông tin danh sách khách hàng 
+app.get('/listC', (req, res) => {
+  const query = 'SELECT * FROM KhachHang';
+  sql.query(query)
+    .then((result) => {
+      // Gửi kết quả về cho máy khách
+      res.json(result.recordset);
+    })
+    .catch((error) => {
+      console.log('Error executing SQL query:', error);
+      res.status(500).send('Internal Server Error');
+    });
+});
+
+// -------- 7. Thêm thông tin khách hàng 
+app.post('/addC', (req, res) => {
+  // Lấy thông tin xe từ yêu cầu POST
+  const Ho = req.body.Ho;
+  const Ten = req.body.Ten;
+  const SoDienThoai = req.body.SoDienThoai;
+  const Email = req.body.Email;
+  const DiaChi = req.body.DiaChi;
+  const SoCCCD_CMND = req.body.SoCCCD_CMND;
+  // Thực hiện truy vấn SQL để thêm thông tin xe vào cơ sở dữ liệu
+  const query = `INSERT INTO KhachHang (Ho, Ten, SoDienThoai, Email, DiaChi, SoCCCD_CMND) VALUES (N'${Ho}', N'${Ten}', '${SoDienThoai}', '${Email}', N'${DiaChi}', '${SoCCCD_CMND}')`;
+  sql.query(query)
+    .then(() => {
+      // Trả về kết quả thành công dưới dạng JSON
+      res.json({ success: true, message: 'Thêm khách hàng thành công' });
+    })
+    .catch(error => {
+      console.log('Error adding employee:', error);
+      // Trả về kết quả lỗi dưới dạng JSON
+      res.status(500).json({ success: false, message: 'Có lỗi xảy ra khi thêm khách hàng' });
+    });
+});
+
+// -------- 8. Sửa thông tin khách hàng
+//Tim xe de sua
+app.get('/searchCtoupdate', (req, res) => {
+  // Lấy biển số xe từ yêu cầu của người dùng
+  const IdCInput = req.query.IdCInput;
+
+  // Thực hiện truy vấn SQL để lấy thông tin về các loại xe dựa trên biển số
+  const query = `SELECT * FROM KhachHang WHERE MaKhachHang LIKE '%${IdCInput}%'`;
+
+  sql.query(query)
+    .then((result) => {
+      // Gửi kết quả về cho máy khách
+      res.json(result.recordset);
+    })
+    .catch((error) => {
+      console.log('Error executing SQL query:', error);
+      res.status(500).send('Internal Server Error');
+    });
+});
+// Sua thong tin xe
+app.post('/updateC', (req, res) => {
+// Lấy thông tin xe từ yêu cầu POST
+const IdCInput = req.body.IdCInput;
+const Ho = req.body.Ho;
+const Ten = req.body.Ten;
+const SoDienThoai = req.body.SoDienThoai;
+const Email = req.body.Email;
+const DiaChi = req.body.DiaChi;
+const SoCCCD_CMND = req.body.SoCCCD_CMND;
+const ThanhVien = req.body.ThanhVien;
+
+// Thực hiện truy vấn SQL để sửa thông tin xe trong cơ sở dữ liệu
+const query = `UPDATE KhachHang SET Ho=N'${Ho}', Ten=N'${Ten}', SoDienThoai='${SoDienThoai}', Email='${Email}',DiaChi=N'${DiaChi}',SoCCCD_CMND='${SoCCCD_CMND}',ThanhVien=N'${ThanhVien}' WHERE MaKhachHang LIKE '${IdCInput}'`;
+sql.query(query)
+    .then(() => {
+      // Trả về kết quả thành công dưới dạng JSON
+      res.json({ success: true, message: 'Sửa thông tin nhân viên thành công' });
+    })
+    .catch(error => {
+      console.log('Error updating employee:', error);
+      // Trả về kết quả lỗi dưới dạng JSON
+      res.status(500).json({ success: false, message: 'Có lỗi xảy ra khi sửa nhân viên' });
+    });
+});
+
+
+// -------- 9. Xóa thông tin khách hàng 
+//tim nhan vien de xoa
+app.get('/searchCtoremove', (req, res) => {
+  const IdCInput = req.query.IdCInput;
+
+  const query = `SELECT * FROM KhachHang WHERE MaKhachHang LIKE '%${IdCInput}%'`;
+
+  sql.query(query)
+    .then((result) => {
+      // Gửi kết quả về cho máy khách
+      res.json(result.recordset);
+    })
+    .catch((error) => {
+      console.log('Error executing SQL query:', error);
+      res.status(500).send('Internal Server Error');
+    });
+});
+// Xoa thong tin nhan vien
+app.post('/removeC', (req, res) => {
+  const IdCInput = req.body.IdCInput;
+  
+  const query = `EXEC sp_DeleteCustomer @MaKhachHang='${IdCInput}'`;
+  sql.query(query)
+    .then(() => {
+      // Trả về kết quả thành công dưới dạng JSON
+      res.json({ success: true, message: 'Xóa khách hàng thành công' });
+    })
+    .catch(error => {
+      console.log('Error removing customer:', error);
+      // Trả về kết quả lỗi dưới dạng JSON
+      res.status(500).json({ success: false, message: 'Có lỗi xảy ra khi xóa khách hàng' });
+    });
+});
+
+// -------- 10. Tìm khách hàng theo email
+app.get('/searchCustomerparEmail', (req, res) => {
+  // Lấy biển số xe từ yêu cầu của người dùng
+  const EmailCInput = req.query.EmailCInput;
+
+  // Thực hiện truy vấn SQL để lấy thông tin về các loại xe dựa trên biển số
+  const query = `SELECT * FROM KhachHang WHERE Email LIKE '%${EmailCInput}%'`;
+
+  sql.query(query)
+    .then((result) => {
+      // Gửi kết quả về cho máy khách
+      res.json(result.recordset);
+    })
+    .catch((error) => {
+      console.log('Error executing SQL query:', error);
+      res.status(500).send('Internal Server Error');
+    });
+});
+
+// -------- 11. Tìm khách hàng theo tên
+app.get('/searchCustomerparName', (req, res) => {
+  // Lấy biển số xe từ yêu cầu của người dùng
+  const NameCInput = req.query.NameCInput;
+
+  // Thực hiện truy vấn SQL để lấy thông tin về các loại xe dựa trên biển số
+  const query = `SELECT * FROM KhachHang WHERE Ten LIKE N'%${NameCInput}%'`;
+
+  sql.query(query)
+    .then((result) => {
+      // Gửi kết quả về cho máy khách
+      res.json(result.recordset);
+    })
+    .catch((error) => {
+      console.log('Error executing SQL query:', error);
+      res.status(500).send('Internal Server Error');
+    });
+});
+
+// -------- 12. Tìm khách hàng theo số điẹn thoại
+app.get('/searchCustomerparPhone', (req, res) => {
+  // Lấy biển số xe từ yêu cầu của người dùng
+  const PhoneCInput = req.query.PhoneCInput;
+
+  // Thực hiện truy vấn SQL để lấy thông tin về các loại xe dựa trên biển số
+  const query = `SELECT * FROM KhachHang WHERE SoDienThoai LIKE '%${PhoneCInput}%'`;
+
+  sql.query(query)
+    .then((result) => {
+      // Gửi kết quả về cho máy khách
+      res.json(result.recordset);
+    })
+    .catch((error) => {
+      console.log('Error executing SQL query:', error);
+      res.status(500).send('Internal Server Error');
+    });
+});
+
+// -------- 13. Hiển thị lịch sử thuê xe của khách hàng 
+app.get('/searchCustomerparID', (req, res) => {
+  // Lấy biển số xe từ yêu cầu của người dùng
+  const IdCInput = req.query.IdCInput;
+
+  // Thực hiện truy vấn SQL để lấy thông tin về các loại xe dựa trên biển số
+  const query = `SELECT * FROM KhachHang WHERE MaKhachHang LIKE '%${IdCInput}%'`;
+
+  sql.query(query)
+    .then((result) => {
+      // Gửi kết quả về cho máy khách
+      res.json(result.recordset);
+    })
+    .catch((error) => {
+      console.log('Error executing SQL query:', error);
+      res.status(500).send('Internal Server Error');
+    });
+});
+
+app.get('/RentalHistory', (req, res) => {
+  // Lấy biển số xe từ yêu cầu của người dùng
+  const IdCInput = req.query.IdCInput;
+
+  // Thực hiện truy vấn SQL để lấy thông tin về các loại xe dựa trên biển số
+  const query = `SELECT QL.MaThue, QL.MaKhachHang, KhachHang.Ho, KhachHang.Ten, QL.MaXe, Xe.BienSo, QL.DiaDiemNhanXe, QL.DiaDiemTraXe, QL.NgayBatDau, QL.NgayKetThuc
+                FROM QuanLyThueXe AS QL 
+                JOIN KhachHang ON QL.MaKhachHang = KhachHang.MaKhachHang
+                JOIN Xe ON QL.MaXe = Xe.MaXe 
+                WHERE QL.MaKhachHang LIKE '%${IdCInput}%'`;
+
+  sql.query(query)
+    .then((result) => {
+      // Gửi kết quả về cho máy khách
+      res.json(result.recordset);
+    })
+    .catch((error) => {
+      console.log('Error executing SQL query:', error);
+      res.status(500).send('Internal Server Error');
+    });
+});
+
+// -------- 14. Xem báo cáo theo tháng 
+app.get('/ReportparMonth', (req, res) => {
+  // Lấy biển số xe từ yêu cầu của người dùng
+  const MonthInput = req.query.MonthInput;
+
+  // Thực hiện truy vấn SQL để lấy thông tin về các loại xe dựa trên biển số
+  const query = `SELECT 
+                FORMAT(QLHD.NgayThanhToan, 'MM/yyyy') AS ThangNam,
+                COUNT(QLTX.MaThue) AS SoLuotThue,
+                SUM(QLHD.TienThanhToan) - 
+                (SELECT SUM(NV.TienLuong) FROM NhanVien NV) - 
+                ISNULL((SELECT SUM(BDX.TienBaoDuong) FROM BaoDuongXe BDX WHERE FORMAT(BDX.NgayBaoDuongTruocDo, 'MM/yyyy') = FORMAT(QLHD.NgayThanhToan, 'MM/yyyy')),0) AS DoanhThu
+                FROM QuanLyThueXe QLTX
+                JOIN QuanLyHoaDon QLHD ON QLTX.MaThue = QLHD.MaThue
+                GROUP BY FORMAT(QLHD.NgayThanhToan, 'MM/yyyy') 
+                HAVING FORMAT(QLHD.NgayThanhToan, 'MM/yyyy') LIKE '%${MonthInput}%'`;
+
+  sql.query(query)
+    .then((result) => {
+      // Gửi kết quả về cho máy khách
+      res.json(result.recordset);
+    })
+    .catch((error) => {
+      console.log('Error executing SQL query:', error);
+      res.status(500).send('Internal Server Error');
+    });
+});
+
+// -------- 15. Xem danh sách xe phổ biến theo tháng 
+app.get('/listPopularCar', (req, res) => {
+  const MonthInput = req.query.MonthInput;
+  const query = `SELECT 
+                FORMAT(QLTX.NgayBatDau, 'MM/yyyy') AS ThangNam, X.MaXe, X.HangXe, X.LoaiXe, X.BienSo,
+                COUNT(QLTX.MaThue) AS SoLuotThue
+                FROM QuanLyThueXe QLTX
+                JOIN Xe X ON QLTX.MaXe = X.MaXe
+                GROUP BY FORMAT(QLTX.NgayBatDau, 'MM/yyyy'),X.MaXe,X.HangXe,X.LoaiXe,X.BienSo
+                HAVING FORMAT(QLTX.NgayBatDau, 'MM/yyyy') LIKE '%${MonthInput}%'
+                ORDER BY SoLuotThue DESC`;
   sql.query(query)
     .then((result) => {
       // Gửi kết quả về cho máy khách
@@ -195,6 +579,184 @@ app.get('/timxe', (req, res) => {
       res.status(500).send('Internal Server Error');
     });
 });
+
+//--- Đã xong 3 phần ---//
+// Sử lý user
+
+//------------- 1. Danh sách USER
+// Danh sach nhân viên
+app.get('/listUE', (req, res) => {
+  const query = `SELECT U.MaNhanVien, Nv.HoTen, U.Username, U.Password, Nv.ChucVu
+                FROM Users U
+                JOIN NhanVien Nv ON Nv.MaNhanVien=U.MaNhanVien
+                WHERE Nv.ChucVu = N'Nhân viên'`;
+  sql.query(query)
+    .then((result) => {
+      // Gửi kết quả về cho máy khách
+      res.json(result.recordset);
+    })
+    .catch((error) => {
+      console.log('Error executing SQL query:', error);
+      res.status(500).send('Internal Server Error');
+    });
+});
+// Danh sach quản lý
+app.get('/listUC', (req, res) => {
+  const query = `SELECT U.MaNhanVien, Nv.HoTen, U.Username, U.Password, Nv.ChucVu
+                FROM Users U
+                JOIN NhanVien Nv ON Nv.MaNhanVien=U.MaNhanVien
+                WHERE Nv.ChucVu != N'Nhân viên'`;
+  sql.query(query)
+    .then((result) => {
+      // Gửi kết quả về cho máy khách
+      res.json(result.recordset);
+    })
+    .catch((error) => {
+      console.log('Error executing SQL query:', error);
+      res.status(500).send('Internal Server Error');
+    });
+});
+
+
+//------------- 2. Thêm USER
+app.post('/addU', (req, res) => {
+  // Lấy thông tin xe từ yêu cầu POST
+  const MaNhanVien = req.body.MaNhanVien;
+  const Username = req.body.Username;
+  const Password = req.body.Password;
+  // Thực hiện truy vấn SQL để thêm thông tin xe vào cơ sở dữ liệu
+  const query = `INSERT INTO Users (MaNhanVien, Username, Password) VALUES ('${MaNhanVien}', '${Username}', '${Password}')`;
+  sql.query(query)
+    .then(() => {
+      // Trả về kết quả thành công dưới dạng JSON
+      res.json({ success: true, message: 'Thêm tài khoản thành công' });
+    })
+    .catch(error => {
+      console.log('Error adding user:', error);
+      // Trả về kết quả lỗi dưới dạng JSON
+      res.status(500).json({ success: false, message: 'Có lỗi xảy ra khi thêm tài khoản' });
+    });
+});
+
+//------------- 3. Sửa USER
+app.post('/updateU', (req, res) => {
+  // Lấy thông tin xe từ yêu cầu POST
+  const IdEInput = req.body.IdEInput;
+  const Password = req.body.Password;
+  
+  // Thực hiện truy vấn SQL để sửa thông tin xe trong cơ sở dữ liệu
+  const query = `UPDATE Users SET Password='${Password}' WHERE MaNhanVien='${IdEInput}'`;
+  sql.query(query)
+      .then(() => {
+        // Trả về kết quả thành công dưới dạng JSON
+        res.json({ success: true, message: 'Sửa thông tin tài khoản thành công' });
+      })
+      .catch(error => {
+        console.log('Error updating user:', error);
+        // Trả về kết quả lỗi dưới dạng JSON
+        res.status(500).json({ success: false, message: 'Có lỗi xảy ra khi sửa tài khoản' });
+      });
+  });
+
+//------------- 4. Xóa USER
+app.post('/removeU', (req, res) => {
+  const IdEInput = req.body.IdEInput;
+
+  const query = `DELETE FROM Users WHERE MaNhanVien='${IdEInput}'`;
+  sql.query(query)
+    .then(() => {
+      // Trả về kết quả thành công dưới dạng JSON
+      res.json({ success: true, message: 'Xóa tài khoản thành công' });
+    })
+    .catch(error => {
+      console.log('Error removing user:', error);
+      // Trả về kết quả lỗi dưới dạng JSON
+      res.status(500).json({ success: false, message: 'Có lỗi xảy ra khi xóa user' });
+    });
+});
+
+//------------- 5. Tìm kiếm USER
+app.get('/searchUser', (req, res) => {
+  // Lấy biển số xe từ yêu cầu của người dùng
+  const IdEInput = req.query.IdEInput;
+
+  // Thực hiện truy vấn SQL để lấy thông tin về các loại xe dựa trên biển số
+  const query = `SELECT U.MaNhanVien, Nv.HoTen, U.Username, U.Password, Nv.ChucVu
+                FROM Users U
+                JOIN NhanVien Nv ON Nv.MaNhanVien=U.MaNhanVien 
+                WHERE U.MaNhanVien LIKE '%${IdEInput}%'`;
+  sql.query(query)
+    .then((result) => {
+      // Gửi kết quả về cho máy khách
+      res.json(result.recordset);
+    })
+    .catch((error) => {
+      console.log('Error executing SQL query:', error);
+      res.status(500).send('Internal Server Error');
+    });
+});
+
+//------------- 5. Tìm kiếm Hóa Đơn
+app.get('/searchBillbyIdTxInput', (req, res) => {
+  // Lấy biển số xe từ yêu cầu của người dùng
+  const IdTxInput = req.query.IdTxInput;
+
+  // Thực hiện truy vấn SQL để lấy thông tin về các loại xe dựa trên biển số
+  const query = `SELECT hd.MaHoaDon, hd.MaThue,kh.MaKhachHang, hd.TienThanhToan,hd.PhuongThucThanhToan, hd.NgayThanhToan
+                FROM QuanLyHoaDon hd 
+                JOIN QuanLyThueXe tx ON hd.MaThue=tx.MaThue
+                JOIN KhachHang kh ON kh.MaKhachHang=tx.MaKhachHang
+                WHERE hd.MaThue LIKE '%${IdTxInput}%'`;
+  sql.query(query)
+    .then((result) => {
+      // Gửi kết quả về cho máy khách
+      res.json(result.recordset);
+    })
+    .catch((error) => {
+      console.log('Error executing SQL query:', error);
+      res.status(500).send('Internal Server Error');
+    });
+});
+//------------- 3. Sửa Hóa Đơn
+app.post('/updateBill', (req, res) => {
+  // Lấy thông tin xe từ yêu cầu POST
+  const IdTxInput = req.body.IdTxInput;
+  const PTTTInput = req.body.PTTTInput;
+  const DateInput = req.body.DateInput;
+  
+  // Thực hiện truy vấn SQL để sửa thông tin xe trong cơ sở dữ liệu
+  const query = `UPDATE QuanLyHoaDon SET PhuongThucThanhToan= N'${PTTTInput}', NgayThanhToan='${DateInput}' 
+                 WHERE MaThue='${IdTxInput}'`;
+  sql.query(query)
+      .then(() => {
+        // Trả về kết quả thành công dưới dạng JSON
+        res.json({ success: true, message: 'Sửa thông tin hóa đơn thành công' });
+      })
+      .catch(error => {
+        console.log('Error updating user:', error);
+        // Trả về kết quả lỗi dưới dạng JSON
+        res.status(500).json({ success: false, message: 'Có lỗi xảy ra khi sửa hóa đơn' });
+      });
+  });
+
+
+//---------------------------Code của Nghĩa--------------------------
+
+// Truy van cac xe can phai bao duong
+app.get('/baoduong', (req, res) => {
+  // Thực hiện truy vấn SQL để lấy thông tin về các loại xe
+  const query = ' SELECT Xe.* FROM Xe JOIN BaoDuongXe ON Xe.MaXe = BaoDuongXe.MaXe WHERE BaoDuongXe.NgayBaoDuongTiepTheo < GETDATE();';
+  sql.query(query)
+    .then((result) => {
+      // Gửi kết quả về cho máy khách
+      res.json(result.recordset);
+    })
+    .catch((error) => {
+      console.log('Error executing SQL query:', error);
+      res.status(500).send('Internal Server Error');
+    });
+});
+
 // Them thong tin xe
 app.post('/themxe', (req, res) => {
   // Lấy thông tin xe từ yêu cầu POST
@@ -243,7 +805,7 @@ app.post('/themxe', (req, res) => {
     const carCode = req.body.carCode;
   
     // Thực hiện truy vấn SQL để xóa thông tin xe từ cơ sở dữ liệu dựa trên mã xe
-    const query = `DELETE FROM Xe WHERE MaXe='${carCode}'`;
+    const query = `EXEC sp_DeleteCar @MaXe='${carCode}'`;
     sql.query(query)
     .then(() => {
       // Trả về mã trạng thái 200 để chỉ rằng thêm xe thành công
@@ -301,7 +863,11 @@ app.post('/suaxe', (req, res) => {
 app.get('/timhoadon', (req, res) => {
   const MaHoaDon = req.query.BillID;
 
-  const query = `SELECT * FROM QuanLyHoaDon WHERE MaHoaDon LIKE '%${MaHoaDon}%'`;
+  const query = `SELECT hd.MaHoaDon, hd.MaThue,kh.MaKhachHang, hd.TienThanhToan,hd.PhuongThucThanhToan, hd.NgayThanhToan
+                FROM QuanLyHoaDon hd 
+                JOIN QuanLyThueXe tx ON hd.MaThue=tx.MaThue
+                JOIN KhachHang kh ON kh.MaKhachHang=tx.MaKhachHang
+                WHERE hd.MaHoaDon LIKE '%${MaHoaDon}%'`;
 
   sql.query(query)
     .then((result) => {
@@ -411,7 +977,7 @@ app.post('/xoathongtinthuexe', (req, res) => {
   const rentalCode = req.body.rentalCode;
 
   // Thực hiện truy vấn SQL để xóa thông tin xe từ cơ sở dữ liệu dựa trên mã xe
-  const query = `DELETE FROM QuanLyThueXe WHERE MaThue='${rentalCode}'`;
+  const query = `EXEC sp_DeleteRentCar @MaThue='${rentalCode}'`;
   sql.query(query)
   .then(() => {
     // Trả về mã trạng thái 200 để chỉ rằng thêm xe thành công
@@ -489,6 +1055,6 @@ app.post('/suathongtinthuexe', (req, res) => {
 });
 
 // Khởi động máy chủ
-app.listen(3000, () => {
-  console.log('Server is running on port 3000');
+app.listen(4000, () => {
+  console.log('Server is running on port 4000');
 });

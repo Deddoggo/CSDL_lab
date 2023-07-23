@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./assets/fonts/themify-icons/themify-icons.css">
+    <link rel="shortcut icon" type="image/png" href="./assets/img/logo.png"/>
     <link rel="stylesheet" href="./assets/css/preset.css">
     <link rel="stylesheet" href="./assets/css/base.css">
     <link rel="stylesheet" href="./assets/css/main.css">
@@ -12,6 +13,38 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap&subset=vietnamese" rel="stylesheet">
     <title>List Employee</title>
+    <script src = "../main.js"></script>
+    <style>
+      /* Định dạng bảng */
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        /*width: 870px; /* Tăng kích thước bảng */
+        /*height: 650px;*/
+        margin: 0 auto; /* Căn giữa bảng */
+        overflow-x: auto;
+      }
+  
+      /* Định dạng hàng đầu tiên (tiêu đề cột) */
+      thead th {
+        background-color: #33b0b9;
+        font-weight: bold;
+        padding: 12px; /* Tăng kích thước padding */
+        text-align: left;
+      }
+  
+      /* Định dạng các ô dữ liệu */
+      tbody td {
+        border: 1px solid #ddd;
+        padding: 12px; /* Tăng kích thước padding */
+        background-color: #ffffff74;
+      }
+  
+      /* Định dạng các ô dữ liệu đặc biệt (ví dụ: cột đầu tiên) */
+      tbody td:first-child {
+        font-weight: bold;
+      }
+    </style>
 </head>
 <body>
   <div class="header">
@@ -36,6 +69,7 @@
           <li class="header__subListItem">
             <a class="header__linkSubnav" href="manageCustomer.html">Quản lý khách hàng</a>
             <ul class="header__subSubnav">
+              <li class="header__listItemSubSubnav"><a class="header__linkSubSubnav" href="listCustomer.html">Danh sách khách hàng</a></li>
               <li class="header__listItemSubSubnav"><a class="header__linkSubSubnav" href="addCustomer.html">Thêm thông tin khách hàng</a></li>
               <li class="header__listItemSubSubnav"><a class="header__linkSubSubnav" href="updateCustomer.html">Sửa thông tin khách hàng</a></li>
               <li class="header__listItemSubSubnav"><a class="header__linkSubSubnav" href="removeCustomer.html">Xóa thông tin khách hàng</a></li>
@@ -49,9 +83,10 @@
             <a class="header__linkSubnav" href="manageRentCar.html">Quản lý thuê xe</a>
             <ul class="header__subSubnav">
               <li class="header__listItemSubSubnav"><a class="header__linkSubSubnav" href="addRentCar.html">Thêm thông tin đặt xe</a></li>
-              <li class="header__listItemSubSubnav"><a class="header__linkSubSubnav" href="updateRentCar.html">Chỉnh sửa thông tin đặt xe</a></li>
+              <li class="header__listItemSubSubnav"><a class="header__linkSubSubnav" href="updateRentCar.html">Sửa thông tin đặt xe</a></li>
               <li class="header__listItemSubSubnav"><a class="header__linkSubSubnav" href="removeRentCar.html">Xóa thông tin đặt xe</a></li>
               <li class="header__listItemSubSubnav"><a class="header__linkSubSubnav" href="searchRentCar.html">Tìm thông tin đặt xe</a></li>
+              <li class="header__listItemSubSubnav"><a class="header__linkSubSubnav" href="updateBill.html">Cập nhật hóa đơn</a></li>
               <li class="header__listItemSubSubnav"><a class="header__linkSubSubnav" href="searchBill.html">Thông tin hóa đơn khách hàng</a></li>
             </ul>
           </li>
@@ -60,9 +95,20 @@
             <ul class="header__subSubnav">
               <li class="header__listItemSubSubnav"><a class="header__linkSubSubnav" href="addCar.html">Thêm thông tin xe</a></li>
               <li class="header__listItemSubSubnav"><a class="header__linkSubSubnav" href="updateCar.html">Sửa thông tin xe</a></li>
+              <li class="header__listItemSubSubnav"><a class="header__linkSubSubnav" href="removeCar.html">Xóa thông tin xe</a></li>
               <li class="header__listItemSubSubnav"><a class="header__linkSubSubnav" href="searchCar.html">Tìm kiếm xe</a></li>
               <li class="header__listItemSubSubnav"><a class="header__linkSubSubnav" href="carType.html">Hiển thị thông báo các loại xe</a></li>
               <li class="header__listItemSubSubnav"><a class="header__linkSubSubnav" href="carMaintenance.html">Bảo dưỡng xe</a></li>
+            </ul>
+          </li>
+          <li class="header__subListItem">
+            <a class="header__linkSubnav" href="manageAccount.html">Quản lý tài khoản</a>
+            <ul class="header__subSubnav">
+              <li class="header__listItemSubSubnav"><a class="header__linkSubSubnav" href="listAccount.html">Danh sách tài khoản</a></li>
+              <li class="header__listItemSubSubnav"><a class="header__linkSubSubnav" href="addAccount.html">Thêm tài khoản</a></li>
+              <li class="header__listItemSubSubnav"><a class="header__linkSubSubnav" href="updateAccount.html">Sửa tài khoản</a></li>
+              <li class="header__listItemSubSubnav"><a class="header__linkSubSubnav" href="removeAccount.html">Xóa tài khoản</a></li>
+              <li class="header__listItemSubSubnav"><a class="header__linkSubSubnav" href="searchAccount.html">Tìm kiếm tài khoản</a></li>
             </ul>
           </li>
           <li class="header__subListItem">
@@ -79,7 +125,7 @@
       <li class="header__listItem"><a class="header__link" href="signin.html">Đăng Xuất</a></li>
       <li class="header__listItem"><a class="header__link" href="help.html">Hỗ Trợ</a></li>
     </ul>
-</div>
+  </div>
 
       <div class="content">
         <div class="content__sidebar">
@@ -104,7 +150,60 @@
                 <p class="content__layout2p1Heading">Danh sách nhân viên</p>
               </div>
               <div class="content__layout2p2">
-                
+                <!-- - Doan code de lay du lieu tu localhost:3000/data va hien thi len page -->
+
+              <table id="employeeTable" class="hidden">
+                <thead>
+                  <tr>
+                      <th>Mã Nhân Viên</th>
+                      <th>Họ Tên</th>
+                      <th>Số Điện Thoại</th>
+                      <th>Email</th>
+                      <th>Địa chỉ</th>
+                      <th>CCCD/CMND</th>
+                      <th>Chức Vụ</th>
+                      <th>Tiền Lương</th>
+                  </tr>
+                </thead>
+                <tbody id="employeeTableBody"></tbody>
+              </table>
+<style>
+  .hidden {
+    display: none;
+  }
+</style>
+<script>
+    fetch('http://localhost:4000/listE')
+      .then(response => response.json())
+      .then(employees => {
+        const employeeTable = document.getElementById('employeeTable');
+        const employeeTableBody = document.getElementById('employeeTableBody');
+
+        // Xóa các hàng cũ trong bảng
+        while (employeeTableBody.firstChild) {
+          employeeTableBody.removeChild(employeeTableBody.firstChild);
+        }
+
+        // Thêm dữ liệu mới vào bảng
+        employees.forEach(employee => {
+          const row = employeeTableBody.insertRow();
+          row.insertCell().textContent = employee.MaNhanVien;
+          row.insertCell().textContent = employee.HoTen;
+          row.insertCell().textContent = employee.SoDienThoai;
+          row.insertCell().textContent = employee.Email;
+          row.insertCell().textContent = employee.DiaChi;
+          row.insertCell().textContent = employee.SoCCCD_CMND;
+          row.insertCell().textContent = employee.ChucVu;
+          row.insertCell().textContent = employee.TienLuong;
+        });
+
+        // Hiển thị bảng
+        employeeTable.classList.remove('hidden');
+      })
+      .catch(error => {
+        console.log('Error fetching employee list:', error);
+      });
+</script> 
               </div>
           </div>
         </div>

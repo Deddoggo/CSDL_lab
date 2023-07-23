@@ -31,7 +31,7 @@
 .content__sidebarHeading{
     align-self: flex-start;
     margin-bottom: 0px;
-    flex: 1;
+    /* flex: 1; */
     margin-left: 10px;
     font-size: 3rem;
     line-height: 3rem;

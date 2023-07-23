@@ -3,24 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" type="image/png" href="./assets/img/logo.png"/>
     <link rel="stylesheet" href="./assets/fonts/themify-icons/themify-icons.css">
+    <link rel="shortcut icon" type="image/png" href="./assets/img/logo.png"/>
     <link rel="stylesheet" href="./assets/css/preset.css">
     <link rel="stylesheet" href="./assets/css/base.css">
     <link rel="stylesheet" href="./assets/css/main.css">
     <link rel="stylesheet" href="./assets/css/home.css">
-    <link rel="stylesheet" href="./assets/css/layout1.css">
-    <link rel="stylesheet" href="./assets/css/layout1Search.css">
+    <link rel="stylesheet" href="./assets/css/layout2.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap&subset=vietnamese" rel="stylesheet">
-    <title>Search Car</title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
+    <title>List Customer</title>
+    <script src = "../main.js"></script>
     <style>
       /* Định dạng bảng */
       table {
         border-collapse: collapse;
         width: 100%;
+        width: 870px; /* Tăng kích thước bảng */
+        height: 650px;
         margin: 0 auto; /* Căn giữa bảng */
         overflow-x: auto;
       }
@@ -127,182 +127,133 @@
     </ul>
   </div>
 
-    <div class="content">
-      <div class="content__sidebar">
-        <p class="content__sidebarHeading">Chức năng</p>
-        <ul class="content__sidebarList">
-          <li class="content__sidebarItem"><a class="content__sidebarFunction" href="manageCar.html">Quản lý xe</a></li>
-          <li class="content__sidebarItem">
-            <ul class="content__sidebarSubList">
-            <li class="content__sidebarSubItem"><a class="content__sidebarLink" href="addCar.html">Thêm thông tin xe</a></li>
-            <li class="content__sidebarSubItem"><a class="content__sidebarLink" href="updateCar.html">Sửa thông tin xe</a></li>
-            <li class="content__sidebarSubItem"><a class="content__sidebarLink" href="removeCar.html">Xóa thông tin xe</a></li>
-            <li class="content__sidebarSubItem"><a class="content__sidebarLink" href="searchCar.html">Tìm kiếm xe</a></li>
-            <li class="content__sidebarSubItem"><a class="content__sidebarLink" href="carType.html">Hiển thị thông tin các loại xe</a></li>
-            <li class="content__sidebarSubItem"><a class="content__sidebarLink" href="carMaintenance.html">Bảo dưỡng xe</a></li>
-          </ul>
-          </li>
-        </ul>
-        <p id="ct__sbback"><a class="ct__sbbackLink" href="home.html"><i class="ti-angle-left" style="font-size: 1.8rem;"></i>&nbspQuay lại</a></p>
-      </div>
-      <div class="content__main">
-        <div class="content__layout1">
-            <div class="content__layout1p1">
-              <form class="content__layout1p1SearchForm" action="#" method="get" onsubmit="event.preventDefault(); searchCarsByLicensePlate();">
-                    <input class="content__layout1p1SearchArea" type="text" placeholder="Nhập biển số xe" id="licensePlateInput">
-                    <input class="content__layout1p1BtnSubmit" type="submit" value="Tìm kiếm"onclick="searchCarsByLicensePlate()">
-                </form>
-            </div>
-            <div class="content__layout1p2">
-            <!-- - Doan code de lay du lieu tu localhost:3000/data va hien thi len page -->
-
-            <table id="carTable" class="hidden">
-              <thead>
-                <tr>
-                    <th>Hãng xe</th>
-                    <th>Loại xe</th>
-                    <th>Số chỗ ngồi</th>
-                    <th>Năm sản xuất</th>
-                    <th>Biển số</th>
-                    <th>Tình trạng</th>
-                    <th>Vị trí hiện tại</th>
-                    <th>Nguyên liệu</th>
-                    <th>Số km đã đi</th>
-                </tr>
-              </thead>
-              <tbody id="carTableBody"></tbody>
-            </table>
-<!-- Dinh nghia cac style cho bang va thong bao-->
-<style>
-.hidden {
-  display: none;
-}
-</style>
-<style>
-.no-match-message {
-  color: red;
-  font-size: 24px; /* Kích thước chữ */
-  font-weight: bold; /* Độ đậm chữ */
-  overflow-x: 12px;
-  padding-top: 10px; /* Dịch xuống */
-  padding-right: 20px; /* Dịch sang phải */
-  text-align:center; /* Căn phải */
-}
-</style>
-
-<style>
-.blank-message {
-  color: red;
-  font-size: 24px; /* Kích thước chữ */
-  font-weight: bold; /* Độ đậm chữ */
-  overflow-x: 12px;
-  padding-top: 10px; /* Dịch xuống */
-  padding-right: 20px; /* Dịch sang phải */
-  text-align:center; /* Căn phải */
-}
-</style>
-<p id="noMatchMessage" class="no-match-message" style="display: none;">Không có xe khớp với biển số bạn nhập</p>
-<p id="blankmessage" class="blank-message" style="display: none;">Không được để trống ô tìm kiếm </p>
-<script>
-  function searchCarsByLicensePlate() {
-const licensePlate = document.getElementById('licensePlateInput').value;
-// Gửi yêu cầu truy vấn với biển số xe đã nhập
-fetch(`/timxe?licensePlate=${licensePlate}`)
-  .then(response => response.json())
-  .then(cars => {
-    const noMatchMessage = document.getElementById('noMatchMessage');
-    const carTable = document.getElementById('carTable');
-    const carTableBody = document.getElementById('carTableBody');
-
-    // Xóa các hàng cũ trong bảng
-    while (carTableBody.firstChild) {
-      carTableBody.removeChild(carTableBody.firstChild);
-    }
-
-    if (cars.length === 0) {
-    // Không có xe khớp, hiển thị thông báo và ẩn bảng
-    noMatchMessage.style.display = 'block';
-    carTable.style.display = 'none';
-    blankmessage.style.display = 'none';
-  } 
-  else if(licensePlate === ''){
-    blankmessage.style.display = 'block';
-    carTable.style.display = 'none';
-    noMatchMessage.style.display = 'none';
-  }
-  else {
-    // Có xe khớp, ẩn thông báo và hiển thị bảng
-    noMatchMessage.style.display = 'none';
-    carTable.style.display = 'table';
-
-    cars.forEach(car => {
-      // Thêm dữ liệu mới vào bảng
-      const row = carTableBody.insertRow();
-      row.insertCell().textContent = car.HangXe;
-      row.insertCell().textContent = car.LoaiXe;
-      row.insertCell().textContent = car.SoChoNgoi;
-      row.insertCell().textContent = car.NamSanXuat;
-      row.insertCell().textContent = car.BienSo;
-      row.insertCell().textContent = car.TinhTrang;
-      row.insertCell().textContent = car.ViTriHienTai;
-      row.insertCell().textContent = car.NguyenLieu;
-      row.insertCell().textContent = car.SoKmDaDi;
-    });
-  }
-})
-.catch(error => {
-  console.log('Error searching cars:', error);
-});
-}
-    </script>
-            </div>
-        </div>
-      </div>
-  </div>
-  
-
-  <div id="footer">
-    <div class="footer">
-          <footer class="footer">
-              <div class="footer__p1">
-                <p class="footer--h1">Công ty cho thuê xe Takehiro</p>
-                <div class="footer--h2"> <i class="ti-location-pin"></i>
-                  <a class="footer__link" href="https://goo.gl/maps/GX8fSM2AWNVL1nPk6"> Số 10 Giải Phóng, Hai Bà Trưng, Hà Nội</a>   
-                  <div class="map-box"><img class="maps" src="./assets/img/AddressCpn.png" alt=""> </div>
-                </div>
-                <div class="clear"></div>
-                <p class="footer--h2"> 
-                  <i class="ti-file"></i> GPKD số 0312345678 cấp bởi Sở Kế hoạch và Đầu tư Thành Phố Hà Nội ngày 07/06/2010
-                </p>
-                <p class="footer--h2"><i class="fal fa-phone fa-rotate-90" style="color: #c4def6;"></i> <i class="ti-mobile"></i> Điện thoại: 1800 1008 - 0971234567</p>
-                <p class="footer--h2"><i class="ti-email"></i> Email liên hệ: Takehiro@busi.vn</p>
-              </div>
-              <div class="footer__p2">
-                <p class="footer--h1">Kết nối với Takehiro</p>
-                <ul class="footer--h15">
-                  <li class="footer__p2ListItem"><a href="" class="footer--h2"><i class="ti-facebook"> </i> Facebook</a></li>
-                  <li class="footer__p2ListItem"><a href="" class="footer--h2"><i class="ti-twitter"> </i> Twitter</a></li>
-                  <li class="footer__p2ListItem"><a href="" class="footer--h2"><i class="ti-youtube"> </i> Youtube</a></li>
-                  <li class="footer__p2ListItem"><a href="" class="footer--h2"><i class="ti-instagram"> </i> Instagram</a></li>
+      <div class="content">
+        <div class="content__sidebar">
+            <p class="content__sidebarHeading">Chức năng</p>
+            <ul class="content__sidebarList">
+              <li class="content__sidebarItem"><a class="content__sidebarFunction" href="manageCustomer.html">Quản lý khách hàng</a></li>
+              <li class="content__sidebarItem">
+                <ul class="content__sidebarSubList">
+                  <li class="content__sidebarSubItem"><a class="content__sidebarLink" href="listCustomer.html">Danh sách khách hàng</a></li>
+                  <li class="content__sidebarSubItem"><a class="content__sidebarLink" href="addCustomer.html">Thêm thông tin khách hàng</a></li>
+                  <li class="content__sidebarSubItem"><a class="content__sidebarLink" href="updateCustomer.html">Sửa thông tin khách hàng</a></li>
+                  <li class="content__sidebarSubItem"><a class="content__sidebarLink" href="removeCustomer.html">Xóa thông tin khách hàng</a></li>
+                  <li class="content__sidebarSubItem"><a class="content__sidebarLink" href="searchCustomerByEmail.html">Tìm khách hàng theo email</a></li>
+                  <li class="content__sidebarSubItem"><a class="content__sidebarLink" href="searchCustomerByName.html">Tìm khách hàng theo tên</a></li>
+                  <li class="content__sidebarSubItem"><a class="content__sidebarLink" href="searchCustomerByPN.html">Tìm khách hàng theo sđt</a></li>
+                  <li class="content__sidebarSubItem"><a class="content__sidebarLink" href="customerHistory.html">Lịch sử thuê của khách</a></li>
                 </ul>
+              </li>
+            </ul>
+            <p id="ct__sbback"><a class="ct__sbbackLink" href="home.html"><i class="ti-angle-left" style="font-size: 1.8rem;"></i>&nbspQuay lại</a></p>
+        </div>
+        <div class="content__main">
+          <div class="content__layout2">
+              <div class="content__layout2p1">
+                <p class="content__layout2p1Heading">Danh sách khách hàng</p>
               </div>
-              <div class="footer__p3">
-                <img class="footer__p3logo" src="./assets/img/logobocongthuong.png" alt="đã thông báo với bộ công thương">
-                <img class="footer__p3logo" src="./assets/img/dmca-logo.png" alt="">
+              <div class="content__layout2p2">
+               <!-- - Doan code de lay du lieu tu localhost:3000/data va hien thi len page -->
+
+              <table id="customerTable" class="hidden">
+                <thead>
+                  <tr>
+                      <th>Mã Khách Hàng</th>
+                      <th>Họ</th>
+                      <th>Tên</th>
+                      <th>Số Điện Thoại</th>
+                      <th>Email</th>
+                      <th>Địa chỉ</th>
+                      <th>CCCD/CMND</th>
+                      <th>Thành Viên</th>
+                  </tr>
+                </thead>
+                <tbody id="customerTableBody"></tbody>
+              </table>
+<style>
+  .hidden {
+    display: none;
+  }
+</style>
+<script>
+    fetch('http://localhost:4000/listC')
+      .then(response => response.json())
+      .then(customers => {
+        const customerTable = document.getElementById('customerTable');
+        const customerTableBody = document.getElementById('customerTableBody');
+
+        // Xóa các hàng cũ trong bảng
+        while (customerTableBody.firstChild) {
+          customerTableBody.removeChild(customerTableBody.firstChild);
+        }
+
+        // Thêm dữ liệu mới vào bảng
+        customers.forEach(customer => {
+          const row = customerTableBody.insertRow();
+          row.insertCell().textContent = customer.MaKhachHang;
+          row.insertCell().textContent = customer.Ho;
+          row.insertCell().textContent = customer.Ten;
+          row.insertCell().textContent = customer.SoDienThoai;
+          row.insertCell().textContent = customer.Email;
+          row.insertCell().textContent = customer.DiaChi;
+          row.insertCell().textContent = customer.SoCCCD_CMND;
+          row.insertCell().textContent = customer.ThanhVien;
+        });
+
+        // Hiển thị bảng
+        customerTable.classList.remove('hidden');
+      })
+      .catch(error => {
+        console.log('Error fetching car list:', error);
+      });
+</script>  
               </div>
-          </footer>
-    </div>
-    <div class="footer2">
-        <footer class="footer">
-          <div class="footer__logo">
-            <img class="footer__logoImg" src="./assets/img/logo.png" alt="logo công ty">
           </div>
-          <div class="footer__cpn">
-            <p class="footer__name">Takehiro Rent Car</p>
-          </div>
-          <div class="footer__slogan">Best Service, Right Time, Right People</div>
-        </footer>
+        </div>
     </div>
-  </div>
+
+    <div id="footer">
+        <div class="footer">
+              <footer class="footer">
+                  <div class="footer__p1">
+                    <p class="footer--h1">Công ty cho thuê xe Takehiro</p>
+                    <div class="footer--h2"> <i class="ti-location-pin"></i>
+                      <a class="footer__link" href="https://goo.gl/maps/GX8fSM2AWNVL1nPk6"> Số 10 Giải Phóng, Hai Bà Trưng, Hà Nội</a>   
+                      <div class="map-box"><img class="maps" src="./assets/img/AddressCpn.png" alt=""> </div>
+                    </div>
+                    <div class="clear"></div>
+                    <p class="footer--h2"> 
+                      <i class="ti-file"></i> GPKD số 0312345678 cấp bởi Sở Kế hoạch và Đầu tư Thành Phố Hà Nội ngày 07/06/2010
+                    </p>
+                    <p class="footer--h2"><i class="fal fa-phone fa-rotate-90" style="color: #c4def6;"></i> <i class="ti-mobile"></i> Điện thoại: 1800 1008 - 0971234567</p>
+                    <p class="footer--h2"><i class="ti-email"></i> Email liên hệ: Takehiro@busi.vn</p>
+                  </div>
+                  <div class="footer__p2">
+                    <p class="footer--h1">Kết nối với Takehiro</p>
+                    <ul class="footer--h15">
+                      <li class="footer__p2ListItem"><a href="" class="footer--h2"><i class="ti-facebook"> </i> Facebook</a></li>
+                      <li class="footer__p2ListItem"><a href="" class="footer--h2"><i class="ti-twitter"> </i> Twitter</a></li>
+                      <li class="footer__p2ListItem"><a href="" class="footer--h2"><i class="ti-youtube"> </i> Youtube</a></li>
+                      <li class="footer__p2ListItem"><a href="" class="footer--h2"><i class="ti-instagram"> </i> Instagram</a></li>
+                    </ul>
+                  </div>
+                  <div class="footer__p3">
+                    <img class="footer__p3logo" src="./assets/img/logobocongthuong.png" alt="đã thông báo với bộ công thương">
+                    <img class="footer__p3logo" src="./assets/img/dmca-logo.png" alt="">
+                  </div>
+              </footer>
+        </div>
+        <div class="footer2">
+            <footer class="footer">
+              <div class="footer__logo">
+                <img class="footer__logoImg" src="./assets/img/logo.png" alt="logo công ty">
+              </div>
+              <div class="footer__cpn">
+                <p class="footer__name">Takehiro Rent Car</p>
+              </div>
+              <div class="footer__slogan">Best Service, Right Time, Right People</div>
+            </footer>
+        </div>
+    </div>
 </body>
 </html>

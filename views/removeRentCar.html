@@ -4,11 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./assets/fonts/themify-icons/themify-icons.css">
+    <link rel="shortcut icon" type="image/png" href="./assets/img/logo.png"/>
     <link rel="stylesheet" href="./assets/css/preset.css">
     <link rel="stylesheet" href="./assets/css/base.css">
     <link rel="stylesheet" href="./assets/css/main.css">
     <link rel="stylesheet" href="./assets/css/home.css">
-    <link rel="stylesheet" href="./assets/css/removeRentCar.css">
+    <link rel="stylesheet" href="./assets/css/layout1Remove.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap&subset=vietnamese" rel="stylesheet">
     <title>Remove Rent Car</title>
@@ -122,7 +123,7 @@
                     </div>
                     <div class="submition_contentContent">Bạn có chắc chắn muốn xóa ?</div>
                     <div class="submition_contentFooter">
-                      <form class="content__layout1p1SearchForm" id="removeRentalForm" onsubmit="event.preventDefault();" action="/xoathongtinthuexe" method="post">
+                      <form  id="removeRentalForm" onsubmit="event.preventDefault();" action="/xoathongtinthuexe" method="post">
                         <button class="content__layout1p1BtnSubmit31" type="submit" onclick="deleteRental()">Có</button>
                         <button class="content__layout1p1BtnSubmit32" onclick="event.preventDefault();">Không</button>
                       </form>
@@ -170,6 +171,7 @@
                 <li class="content__sidebarSubItem"><a class="content__sidebarLink" href="searchRentCar.html">Tìm thông tin đặt xe</a></li>
                 <li class="content__sidebarSubItem"><a class="content__sidebarLink" href="updateRentCar.html">Chỉnh sửa thông tin đặt xe</a></li>
                 <li class="content__sidebarSubItem"><a class="content__sidebarLink" href="removeRentCar.html">Xóa thông tin đặt xe</a></li>
+                <li class="content__sidebarSubItem"><a class="content__sidebarLink" href="updateBill.html">Cập nhật hóa đơn</a></li>
                 <li class="content__sidebarSubItem"><a class="content__sidebarLink" href="searchBill.html">Thông tin hóa đơn</a></li>
               </ul>
             </li>
@@ -291,7 +293,7 @@
                     </div>
     
                     <div class="content__layout1p3">
-                        <form class="content__layout1p1SearchForm2" action="#" method="get" method="get" onsubmit="event.preventDefault();">               
+                        <form class="content__layout1p3Form" action="#" method="get" onsubmit="event.preventDefault();">               
                             <button class="js-delete"> Xóa</button>
                         </form>
                     </div>
@@ -304,6 +306,7 @@
         const Dlts = document.querySelectorAll('.js-delete')
         const submit = document.querySelector('.submition')
         const subclose = document.querySelector('.content__layout1p1BtnSubmit32')
+        const subclose2 = document.querySelector('.content__layout1p1BtnSubmit31')
         function show()
         {
           submit.classList.add('open')
@@ -318,6 +321,7 @@
           submit.classList.remove('open')
         }
         subclose.addEventListener('click',cls)
+        subclose2.addEventListener('click',cls)
       </script>
 
 

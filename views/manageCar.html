@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" type="image/png" href="./assets/img/logo.png"/>
     <link rel="stylesheet" href="./assets/fonts/themify-icons/themify-icons.css">
     <link rel="stylesheet" href="./assets/css/preset.css">
     <link rel="stylesheet" href="./assets/css/base.css">
@@ -15,72 +16,85 @@
     <title>Manage Car</title>
 </head>
 <body>
-    <div class="header">
-        <ul class="header__navleft">
-          <li class="header__listItem"><a class="header__link" href="home.html"><img class="header__logo" src="./assets/img/Rent Car Taxi Cab Logo.png" alt="logo"></a></li>
-          <li class="header__listItem"><a class="header__link" href="home.html">Trang Chủ</a></li>
-          <li class="header__listItem"><a class="header__link" href="service.html">Chăm Sóc Khách Hàng</a></li>
-          <li class="header__listItem">
-            <a id="chucnang" class="header__link" href="home.html">Chức năng &nbsp<i class="ti-angle-down"></i> </a>
-            <i class="ti-angle-down"></i>
-            <ul class="header__subnav">
-              <li class="header__subListItem">
-                <a class="header__linkSubnav" href="manageEmployee.html">Quản lý nhân viên</a>
-                <ul class="header__subSubnav">
-                  <li class="header__listItemSubSubnav"><a class="header__linkSubSubnav" href="listEmployee.html">Danh sách nhân viên</a></li>
-                  <li class="header__listItemSubSubnav"><a class="header__linkSubSubnav" href="addEmployee.html">Thêm thông tin nhân viên</a></li>
-                  <li class="header__listItemSubSubnav"><a class="header__linkSubSubnav" href="updateEmployee.html">Sửa thông tin nhân viên</a></li>
-                  <li class="header__listItemSubSubnav"><a class="header__linkSubSubnav" href="removeEmployee.html">Xóa thông tin nhân viên</a></li>
-                  <li class="header__listItemSubSubnav"><a class="header__linkSubSubnav" href="searchEmployee.html">Tìm kiếm nhân viên</a></li>
-                </ul>
-              </li>
-              <li class="header__subListItem">
-                <a class="header__linkSubnav" href="manageCustomer.html">Quản lý khách hàng</a>
-                <ul class="header__subSubnav">
-                  <li class="header__listItemSubSubnav"><a class="header__linkSubSubnav" href="addCustomer.html">Thêm thông tin khách hàng</a></li>
-                  <li class="header__listItemSubSubnav"><a class="header__linkSubSubnav" href="updateCustomer.html">Sửa thông tin khách hàng</a></li>
-                  <li class="header__listItemSubSubnav"><a class="header__linkSubSubnav" href="removeCustomer.html">Xóa thông tin khách hàng</a></li>
-                  <li class="header__listItemSubSubnav"><a class="header__linkSubSubnav" href="searchCustomerByName.html">Lọc tìm kiếm khách hàng theo tên</a></li>
-                  <li class="header__listItemSubSubnav"><a class="header__linkSubSubnav" href="searchCustomerByPN.html">Lọc tìm kiếm khách hàng theo sdt</a></li>
-                  <li class="header__listItemSubSubnav"><a class="header__linkSubSubnav" href="searchCustomerByEmail.html">Lọc tìm kiếm khách hàng theo email</a></li>
-                  <li class="header__listItemSubSubnav"><a class="header__linkSubSubnav" href="customerHistory.html">Xem lịch sử thuê xe của khách hàng</a></li>
-                </ul>
-              </li>
-              <li class="header__subListItem">
-                <a class="header__linkSubnav" href="manageRentCar.html">Quản lý thuê xe</a>
-                <ul class="header__subSubnav">
-                  <li class="header__listItemSubSubnav"><a class="header__linkSubSubnav" href="addRentCar.html">Thêm thông tin đặt xe</a></li>
-                  <li class="header__listItemSubSubnav"><a class="header__linkSubSubnav" href="updateRentCar.html">Chỉnh sửa thông tin đặt xe</a></li>
-                  <li class="header__listItemSubSubnav"><a class="header__linkSubSubnav" href="removeRentCar.html">Xóa thông tin đặt xe</a></li>
-                  <li class="header__listItemSubSubnav"><a class="header__linkSubSubnav" href="searchRentCar.html">Tìm thông tin đặt xe</a></li>
-                  <li class="header__listItemSubSubnav"><a class="header__linkSubSubnav" href="searchBill.html">Thông tin hóa đơn khách hàng</a></li>
-                </ul>
-              </li>
-              <li class="header__subListItem">
-                <a class="header__linkSubnav" href="manageCar.html">Quản lý xe</a>
-                <ul class="header__subSubnav">
-                  <li class="header__listItemSubSubnav"><a class="header__linkSubSubnav" href="addCar.html">Thêm thông tin xe</a></li>
-                  <li class="header__listItemSubSubnav"><a class="header__linkSubSubnav" href="updateCar.html">Sửa thông tin xe</a></li>
-                  <li class="header__listItemSubSubnav"><a class="header__linkSubSubnav" href="searchCar.html">Tìm kiếm xe</a></li>
-                  <li class="header__listItemSubSubnav"><a class="header__linkSubSubnav" href="carType.html">Hiển thị thông báo các loại xe</a></li>
-                  <li class="header__listItemSubSubnav"><a class="header__linkSubSubnav" href="carMaintenance.html">Bảo dưỡng xe</a></li>
-                </ul>
-              </li>
-              <li class="header__subListItem">
-                <a class="header__linkSubnav" href="report.html">Báo cáo</a>
-                <ul class="header__subSubnav">
-                  <li class="header__listItemSubSubnav"><a class="header__linkSubSubnav" href="monthReport.html">Báo cáo doanh thu các tháng</a></li>
-                  <li class="header__listItemSubSubnav"><a class="header__linkSubSubnav" href="popularCar.html">Loại xe phổ biến </a></li>
-                </ul>
-              </li>
+  <div class="header">
+    <ul class="header__navleft">
+      <li class="header__listItem"><a class="header__link" href="home.html"><img class="header__logo" src="./assets/img/Rent Car Taxi Cab Logo.png" alt="logo"></a></li>
+      <li class="header__listItem"><a class="header__link" href="home.html">Trang Chủ</a></li>
+      <li class="header__listItem"><a class="header__link" href="service.html">Chăm Sóc Khách Hàng</a></li>
+      <li class="header__listItem">
+        <a id="chucnang" class="header__link" href="home.html">Chức năng &nbsp<i class="ti-angle-down"></i> </a>
+        <i class="ti-angle-down"></i>
+        <ul class="header__subnav">
+          <li class="header__subListItem">
+            <a class="header__linkSubnav" href="manageEmployee.html">Quản lý nhân viên</a>
+            <ul class="header__subSubnav">
+              <li class="header__listItemSubSubnav"><a class="header__linkSubSubnav" href="listEmployee.html">Danh sách nhân viên</a></li>
+              <li class="header__listItemSubSubnav"><a class="header__linkSubSubnav" href="addEmployee.html">Thêm thông tin nhân viên</a></li>
+              <li class="header__listItemSubSubnav"><a class="header__linkSubSubnav" href="updateEmployee.html">Sửa thông tin nhân viên</a></li>
+              <li class="header__listItemSubSubnav"><a class="header__linkSubSubnav" href="removeEmployee.html">Xóa thông tin nhân viên</a></li>
+              <li class="header__listItemSubSubnav"><a class="header__linkSubSubnav" href="searchEmployee.html">Tìm kiếm nhân viên</a></li>
+            </ul>
+          </li>
+          <li class="header__subListItem">
+            <a class="header__linkSubnav" href="manageCustomer.html">Quản lý khách hàng</a>
+            <ul class="header__subSubnav">
+              <li class="header__listItemSubSubnav"><a class="header__linkSubSubnav" href="listCustomer.html">Danh sách khách hàng</a></li>
+              <li class="header__listItemSubSubnav"><a class="header__linkSubSubnav" href="addCustomer.html">Thêm thông tin khách hàng</a></li>
+              <li class="header__listItemSubSubnav"><a class="header__linkSubSubnav" href="updateCustomer.html">Sửa thông tin khách hàng</a></li>
+              <li class="header__listItemSubSubnav"><a class="header__linkSubSubnav" href="removeCustomer.html">Xóa thông tin khách hàng</a></li>
+              <li class="header__listItemSubSubnav"><a class="header__linkSubSubnav" href="searchCustomerByName.html">Lọc tìm kiếm khách hàng theo tên</a></li>
+              <li class="header__listItemSubSubnav"><a class="header__linkSubSubnav" href="searchCustomerByPN.html">Lọc tìm kiếm khách hàng theo sdt</a></li>
+              <li class="header__listItemSubSubnav"><a class="header__linkSubSubnav" href="searchCustomerByEmail.html">Lọc tìm kiếm khách hàng theo email</a></li>
+              <li class="header__listItemSubSubnav"><a class="header__linkSubSubnav" href="customerHistory.html">Xem lịch sử thuê xe của khách hàng</a></li>
+            </ul>
+          </li>
+          <li class="header__subListItem">
+            <a class="header__linkSubnav" href="manageRentCar.html">Quản lý thuê xe</a>
+            <ul class="header__subSubnav">
+              <li class="header__listItemSubSubnav"><a class="header__linkSubSubnav" href="addRentCar.html">Thêm thông tin đặt xe</a></li>
+              <li class="header__listItemSubSubnav"><a class="header__linkSubSubnav" href="updateRentCar.html">Sửa thông tin đặt xe</a></li>
+              <li class="header__listItemSubSubnav"><a class="header__linkSubSubnav" href="removeRentCar.html">Xóa thông tin đặt xe</a></li>
+              <li class="header__listItemSubSubnav"><a class="header__linkSubSubnav" href="searchRentCar.html">Tìm thông tin đặt xe</a></li>
+              <li class="header__listItemSubSubnav"><a class="header__linkSubSubnav" href="updateBill.html">Cập nhật hóa đơn</a></li>
+              <li class="header__listItemSubSubnav"><a class="header__linkSubSubnav" href="searchBill.html">Thông tin hóa đơn khách hàng</a></li>
+            </ul>
+          </li>
+          <li class="header__subListItem">
+            <a class="header__linkSubnav" href="manageCar.html">Quản lý xe</a>
+            <ul class="header__subSubnav">
+              <li class="header__listItemSubSubnav"><a class="header__linkSubSubnav" href="addCar.html">Thêm thông tin xe</a></li>
+              <li class="header__listItemSubSubnav"><a class="header__linkSubSubnav" href="updateCar.html">Sửa thông tin xe</a></li>
+              <li class="header__listItemSubSubnav"><a class="header__linkSubSubnav" href="removeCar.html">Xóa thông tin xe</a></li>
+              <li class="header__listItemSubSubnav"><a class="header__linkSubSubnav" href="searchCar.html">Tìm kiếm xe</a></li>
+              <li class="header__listItemSubSubnav"><a class="header__linkSubSubnav" href="carType.html">Hiển thị thông báo các loại xe</a></li>
+              <li class="header__listItemSubSubnav"><a class="header__linkSubSubnav" href="carMaintenance.html">Bảo dưỡng xe</a></li>
+            </ul>
+          </li>
+          <li class="header__subListItem">
+            <a class="header__linkSubnav" href="manageAccount.html">Quản lý tài khoản</a>
+            <ul class="header__subSubnav">
+              <li class="header__listItemSubSubnav"><a class="header__linkSubSubnav" href="listAccount.html">Danh sách tài khoản</a></li>
+              <li class="header__listItemSubSubnav"><a class="header__linkSubSubnav" href="addAccount.html">Thêm tài khoản</a></li>
+              <li class="header__listItemSubSubnav"><a class="header__linkSubSubnav" href="updateAccount.html">Sửa tài khoản</a></li>
+              <li class="header__listItemSubSubnav"><a class="header__linkSubSubnav" href="removeAccount.html">Xóa tài khoản</a></li>
+              <li class="header__listItemSubSubnav"><a class="header__linkSubSubnav" href="searchAccount.html">Tìm kiếm tài khoản</a></li>
+            </ul>
+          </li>
+          <li class="header__subListItem">
+            <a class="header__linkSubnav" href="report.html">Báo cáo</a>
+            <ul class="header__subSubnav">
+              <li class="header__listItemSubSubnav"><a class="header__linkSubSubnav" href="monthReport.html">Báo cáo doanh thu các tháng</a></li>
+              <li class="header__listItemSubSubnav"><a class="header__linkSubSubnav" href="popularCar.html">Loại xe phổ biến </a></li>
             </ul>
           </li>
         </ul>
-        <ul class="header__navright">
-          <li class="header__listItem"><a class="header__link" href="signin.html">Đăng Xuất</a></li>
-          <li class="header__listItem"><a class="header__link" href="help.html">Hỗ Trợ</a></li>
-        </ul>
-</div>
+      </li>
+    </ul>
+    <ul class="header__navright">
+      <li class="header__listItem"><a class="header__link" href="signin.html">Đăng Xuất</a></li>
+      <li class="header__listItem"><a class="header__link" href="help.html">Hỗ Trợ</a></li>
+    </ul>
+  </div>
   
       <div class="content">
         <div class="content__sidebar">
